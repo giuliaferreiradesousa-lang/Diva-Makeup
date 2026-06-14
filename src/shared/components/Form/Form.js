@@ -1,337 +1,66 @@
+import { Input } from "./inputs/Input.js";
+import { Textarea } from "./inputs/Textarea.js";
+import { Select } from "./inputs/Select.js";
+import { File } from "./inputs/File.js";
+
+import { Checkbox } from "./controls/Checkbox.js";
+import { Radio } from "./controls/Radio.js";
+import { Switch } from "./controls/Switch.js";
+
+import { Button } from "./helpers/Button.js";
+import { Row } from "./helpers/Row.js";
+import { Section } from "./helpers/Section.js";
+
+import { Email } from "./shortcuts/Email.js";
+import { Password } from "./shortcuts/Password.js";
+import { Number } from "./shortcuts/Number.js";
+import { Date } from "./shortcuts/Date.js";
+import { Time } from "./shortcuts/Time.js";
+import { Color } from "./shortcuts/Color.js";
+import { Search } from "./shortcuts/Search.js";
+import { Url } from "./shortcuts/Url.js";
+import { Tel } from "./shortcuts/Tel.js";
+import { Range } from "./shortcuts/Range.js";
+
+import { Grid } from "./layouts/Grid.js";
+import { Column } from "./layouts/Column.js";
+import { Group } from "./layouts/Group.js";
+import { Actions } from "./layouts/Actions.js";
+
 export var Form = {
 
-    Input: function (props) {
-
-        return (
-            '<div class="diva-form-group">' +
-
-            (props.label
-                ? '<label class="diva-form-label" for="' + props.id + '">' +
-                props.label +
-                '</label>'
-                : '') +
-
-            '<input ' +
-            'id="' + (props.id || '') + '" ' +
-            'name="' + (props.name || '') + '" ' +
-            'type="' + (props.type || 'text') + '" ' +
-            (props.value !== undefined
-                ? 'value="' + props.value + '" '
-                : '') + '" ' +
-            'placeholder="' + (props.placeholder || '') + '" ' +
-            (props.required ? 'required ' : '') +
-            'class="diva-form-input">' +
-
-            '</div>'
-        );
-
-    },
-
-    Textarea: function (props) {
-
-        return (
-            '<div class="diva-form-group">' +
-
-            '<label class="diva-form-label">' +
-            props.label +
-            '</label>' +
-
-            '<textarea ' +
-            'id="' + props.id + '" ' +
-            'placeholder="' + (props.placeholder || '') + '" ' +
-            'class="diva-form-textarea">' +
-
-            (props.value || '') +
-
-            '</textarea>' +
-
-            '</div>'
-        );
-
-    },
-
-    Select: function (props) {
-
-        var optionsHtml = '';
-
-        for (var i = 0; i < props.options.length; i++) {
-
-            var option = props.options[i];
-
-            var selected = '';
-
-            if (props.value == option.value) {
-                selected = 'selected';
-            }
-
-            optionsHtml +=
-
-                '<option ' +
-                selected +
-                ' value="' +
-                option.value +
-                '">' +
-
-                option.label +
-
-                '</option>';
-        }
-    },
-
-    File: function (props) {
-
-        return (
-
-            '<div class="diva-form-group">' +
-
-            '<label class="diva-form-label">' +
-            props.label +
-            '</label>' +
-
-            '<input ' +
-            'id="' + props.id + '" ' +
-            'type="file" ' +
-            'accept="' + (props.accept || '*') + '" ' +
-            'class="diva-form-file">' +
-
-            '</div>'
-
-        );
-
-    },
-
-    Checkbox: function (props) {
-
-        return (
-
-            '<label class="diva-checkbox">' +
-
-            '<input ' +
-            'type="checkbox" ' +
-            'id="' + props.id + '" ' +
-            (props.checked ? 'checked' : '') +
-            '>' +
-
-            '<span>' +
-            props.label +
-            '</span>' +
-
-            '</label>'
-
-        );
-
-    },
-
-    Radio: function (props) {
-
-        return (
-
-            '<label class="diva-radio">' +
-
-            '<input ' +
-            'type="radio" ' +
-            'name="' + props.name + '" ' +
-            'value="' + props.value + '" ' +
-            (props.checked ? 'checked' : '') +
-            '>' +
-
-            '<span>' +
-            props.label +
-            '</span>' +
-
-            '</label>'
-
-        );
-
-    },
-
-    Switch: function (props) {
-
-        return (
-
-            '<label class="diva-switch">' +
-
-            '<input ' +
-            'type="checkbox" ' +
-            'id="' + props.id + '" ' +
-            (props.checked ? 'checked' : '') +
-            '>' +
-
-            '<span class="diva-switch-slider"></span>' +
-
-            '<span class="diva-switch-label">' +
-            props.label +
-            '</span>' +
-
-            '</label>'
-
-        );
-
-    },
-
-    Hidden: function (props) {
-
-        return (
-
-            '<input ' +
-            'type="hidden" ' +
-            'id="' + props.id + '" ' +
-            'value="' + (props.value || '') + '">'
-
-        );
-
-    },
-
-    Row: function (content) {
-
-        return (
-
-            '<div class="diva-form-row">' +
-
-            content +
-
-            '</div>'
-
-        );
-
-    },
-
-    Section: function (props) {
-
-        return (
-
-            '<section class="diva-form-section">' +
-
-            '<h3 class="diva-form-section-title">' +
-            props.title +
-            '</h3>' +
-
-            props.content +
-
-            '</section>'
-
-        );
-
-    }
-
-
-
-};
-
-/* ==========================================
-   INPUTS ESPECIALIZADOS
-========================================== */
-
-Form.Email = function (props) {
-
-    props = props || {};
-    props.type = "email";
-
-    return Form.Input(props);
-
-};
-
-Form.Password = function (props) {
-
-    props = props || {};
-    props.type = "password";
-
-    return Form.Input(props);
-
-};
-
-Form.Number = function (props) {
-
-    props = props || {};
-    props.type = "number";
-
-    return Form.Input(props);
-
-};
-
-Form.Date = function (props) {
-
-    props = props || {};
-    props.type = "date";
-
-    return Form.Input(props);
-
-};
-
-Form.Time = function (props) {
-
-    props = props || {};
-    props.type = "time";
-
-    return Form.Input(props);
-
-};
-
-Form.Color = function (props) {
-
-    props = props || {};
-    props.type = "color";
-
-    return Form.Input(props);
-
-};
-
-Form.Search = function (props) {
-
-    props = props || {};
-    props.type = "search";
-
-    return Form.Input(props);
-
-};
-
-Form.Url = function (props) {
-
-    props = props || {};
-    props.type = "url";
-
-    return Form.Input(props);
-
-};
-
-Form.Tel = function (props) {
-
-    props = props || {};
-    props.type = "tel";
-
-    return Form.Input(props);
-
-};
-
-Form.Range = function (props) {
-
-    props = props || {};
-    props.type = "range";
-
-    return Form.Input(props);
-
-};
-
-Form.Button = function(props){
-
-    return (
-
-        '<button ' +
-
-            'type="' +
-            (props.type || 'button') +
-            '" ' +
-
-            'class="' +
-            (props.className || 'diva-btn-primary') +
-            '">' +
-
-            (props.icon || '') +
-
-            props.text +
-
-        '</button>'
-
-    );
+    // Inputs
+    Input: Input,
+    Textarea: Textarea,
+    Select: Select,
+    File: File,
+
+    // Controls
+    Checkbox: Checkbox,
+    Radio: Radio,
+    Switch: Switch,
+
+    // Helpers
+    Button: Button,
+    Row: Row,
+    Section: Section,
+
+    // Shortcuts
+    Email: Email,
+    Password: Password,
+    Number: Number,
+    Date: Date,
+    Time: Time,
+    Color: Color,
+    Search: Search,
+    Url: Url,
+    Tel: Tel,
+    Range: Range,
+
+    // Layouts
+    Grid: Grid,
+    Column: Column,
+    Group: Group,
+    Actions: Actions
 
 };
