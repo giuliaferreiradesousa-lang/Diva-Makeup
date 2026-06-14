@@ -31,7 +31,7 @@ function montarHero() {
       id: 1,
       titulo: "Desperte a <span>diva</span> que vive em você",
       subtitulo: "Produtos premium de maquiagem para realçar sua beleza.",
-      imagem: "../../../assets/images/banner-1.png"
+      imagem: window.location.origin + "/src/assets/images/banner-1.png"
     }];
   }
 
@@ -200,7 +200,7 @@ function montarCategorias() {
 
     htmlCategorias = htmlCategorias +
       '<div class="category-card">' +
-        '<img src="' + cat.imagem + '" alt="' + cat.nome + '">' +
+        '<img src="' + window.location.origin + cat.imagem + '" alt="' + cat.nome + '">' +
         '<h3>' + cat.nome + '</h3>' +
         '<p>' + cat.descricao + '</p>' +
       '</div>';
@@ -261,7 +261,7 @@ function montarVitrine() {
           '<span class="vitrine-category">' + produto.categoryName + '</span>' +
           '<h3 class="vitrine-title">' + produto.nome + '</h3>' +
           '<p class="vitrine-price">' + formatarPreco(produto.preco) + '</p>' +
-          '<a href="../../products/pages/product-detail.html?id=' + produto.id + '" class="btn-detalhes">Ver Detalhes</a>' +
+          '<a href="' + window.location.origin + '/src/feature/products/pages/product-detail.html?id=' + produto.id + '" class="btn-detalhes">Ver Detalhes</a>' +
         '</div>' +
       '</div>';
   }

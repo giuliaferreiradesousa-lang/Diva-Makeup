@@ -1,135 +1,286 @@
 import { protectAdminPage } from "../../core/rolesManager.js";
+
 import { navbarComponent } from "../../shared/components/navbar/navbarComponent.js";
 import { footerComponent } from "../../shared/components/footer/footerComponent.js";
 import { initNavbar } from "../../shared/components/navbar/navbarController.js";
-import { adminFormComponent } from "./components/adminFormComponent.js";
-import { adminListComponent } from "./components/adminListComponent.js";
+
 import { injetarSidebar } from "../../shared/components/sidebar/sidebarComponent.js";
-import { categoryFormComponent } from "../categories/components/categoryFormComponent.js";
+
+import { PageHeader } from "../../shared/components/pageHeader/pageHeaderComponent.js";
+
+import { adminTabsComponent } from "./components/adminTabsComponent.js";
+
 import { productFormComponent } from "../products/components/productFormComponent.js";
+import { categoryFormComponent } from "../categories/components/categoryFormComponent.js";
 import { aboutFormComponent } from "../about/components/aboutFormComponent.js";
+
 import { aboutListComponent } from "../about/components/aboutListComponent.js";
 
-// Importando os Controladores Isolados de cada aba
 import { carregarModuloHome } from "./controllers/adminHomeController.js";
-import { carregarModuloCategorias } from "./controllers/adminCategoriesController.js";
 import { carregarModuloProdutos } from "./controllers/adminProductsController.js";
+import { carregarModuloCategorias } from "./controllers/adminCategoriesController.js";
 import { carregarModuloAbout } from "./controllers/adminAboutController.js";
 
-// 1. Proteger página para garantir que apenas admin acesse
+import {
+    heroFormComponent
+}
+    from "../home/components/heroFormComponent.js";
+
+import {
+    heroListComponent
+}
+    from "../home/components/heroListComponent.js";
+
+/* ==========================================
+   PROTEÇÃO
+========================================== */
+
 protectAdminPage();
 
-// 2. Montar layout principal (Navbar e Footer)
-document.getElementById("navbar").innerHTML = navbarComponent();
-document.getElementById("footer").innerHTML = footerComponent();
+/* ==========================================
+   LAYOUT BASE
+========================================== */
+
+document.getElementById("navbar").innerHTML =
+    navbarComponent();
+
+document.getElementById("footer").innerHTML =
+    footerComponent();
+
 initNavbar();
 
-// 3. Injeção da Sidebar
+/* ==========================================
+   SIDEBAR
+========================================== */
+
 var itensMenuAdmin = [
-    { id: 'view-home', nome: 'Home (Hero)', icone: '🏠', link: '#' },
-    { id: 'view-produtos', nome: 'Produtos', icone: '📦', link: '#' },
-    { id: 'view-categorias', nome: 'Categorias', icone: '🏷️', link: '#' },
-    { id: 'view-about', nome: 'Sobre Nós', icone: '🖼️', link: '#' }
+
+    {
+        id: "view-home",
+        nome: "Home (Hero)",
+        icone: "🏠",
+        link: "#"
+    },
+
+    {
+        id: "view-produtos",
+        nome: "Produtos",
+        icone: "📦",
+        link: "#"
+    },
+
+    {
+        id: "view-categorias",
+        nome: "Categorias",
+        icone: "🏷️",
+        link: "#"
+    },
+
+    {
+        id: "view-about",
+        nome: "Sobre Nós",
+        icone: "🖼️",
+        link: "#"
+    }
+
 ];
 
-injetarSidebar('admin-sidebar-container', itensMenuAdmin, { tituloMobile: 'Admin Diva' });
+injetarSidebar(
+    "admin-sidebar-container",
+    itensMenuAdmin,
+    {
+        tituloMobile: "Admin Diva"
+    }
+);
 
-var linksSidebar = document.querySelectorAll("#admin-sidebar-container .sidebar-link");
+/* ==========================================
+   EVENTOS SIDEBAR
+========================================== */
+
+var linksSidebar =
+    document.querySelectorAll(
+        "#admin-sidebar-container .sidebar-link"
+    );
+
 for (var i = 0; i < linksSidebar.length; i++) {
-    linksSidebar[i].onclick = (function(idView) {
-        return function(e) {
-            e.preventDefault();
+
+    linksSidebar[i].onclick = (function (idView) {
+
+        return function (event) {
+
+            event.preventDefault();
+
             window.mudarViewAdmin(idView);
-            
+
             for (var j = 0; j < linksSidebar.length; j++) {
-                linksSidebar[j].classList.remove("active");
+
+                linksSidebar[j]
+                    .classList
+                    .remove("active");
+
             }
+
             this.classList.add("active");
+
         };
+
     })(itensMenuAdmin[i].id);
+
 }
 
-// 4. Motor de Renderização de Views
-window.mudarViewAdmin = function(idView) {
-    var contentArea = document.getElementById("admin-main-content");
+/* ==========================================
+   VIEWS
+========================================== */
+
+window.mudarViewAdmin = function (idView) {
+
+    var contentArea =
+        document.getElementById(
+            "admin-main-content"
+        );
+
     var titulo = "";
+    var subtitulo = "";
+
     var formHtml = "";
     var listHtml = "";
 
-    if (idView === 'view-home') {
-        titulo = "Configurações da Home (Hero)";
-        formHtml = adminFormComponent();
-        listHtml = adminListComponent();
-    } else if (idView === 'view-produtos') {
-        titulo = "Gestão de Produtos";
-        formHtml = productFormComponent();
-        listHtml = '<div id="admin-products-list"></div>';
-    } else if (idView === 'view-categorias') {
-        titulo = "Gestão de Categorias";
-        formHtml = categoryFormComponent();
-        listHtml = '<div id="admin-categories-list"></div>';
-    } else if (idView === 'view-about') {
-        titulo = "Imagens da Seção Sobre";
-        formHtml = aboutFormComponent();
-        listHtml = aboutListComponent();
+    /* ======================
+       HOME
+    ====================== */
+
+    if (idView === "view-home") {
+
+        titulo =
+            "Configurações da Home";
+
+        subtitulo =
+            "Gerencie banners e destaques.";
+
+        formHtml =
+            heroFormComponent();
+
+        listHtml =
+            heroListComponent();
+
     }
 
-    contentArea.innerHTML = 
+    /* ======================
+       PRODUTOS
+    ====================== */
+
+    if (idView === "view-produtos") {
+
+        titulo =
+            "Produtos";
+
+        subtitulo =
+            "Gerencie os produtos da loja.";
+
+        formHtml =
+            productFormComponent();
+
+        listHtml =
+            '<div id="admin-products-list"></div>';
+
+    }
+
+    /* ======================
+       CATEGORIAS
+    ====================== */
+
+    if (idView === "view-categorias") {
+
+        titulo =
+            "Categorias";
+
+        subtitulo =
+            "Gerencie as categorias.";
+
+        formHtml =
+            categoryFormComponent();
+
+        listHtml =
+            '<div id="admin-categories-list"></div>';
+
+    }
+
+    /* ======================
+       ABOUT
+    ====================== */
+
+    if (idView === "view-about") {
+
+        titulo =
+            "Sobre Nós";
+
+        subtitulo =
+            "Gerencie as imagens da seção.";
+
+        formHtml =
+            aboutFormComponent();
+
+        listHtml =
+            aboutListComponent();
+
+    }
+
+    contentArea.innerHTML =
+
         '<div class="admin-container">' +
-            '<header class="admin-header">' +
-                '<h1>' + titulo + '</h1>' +
-                '<p>Gerencie as informações do seu painel.</p>' +
-            '</header>' +
-            renderizarEstruturaAbas(formHtml, listHtml) +
+
+        PageHeader({
+
+            title: titulo,
+
+            subtitle: subtitulo
+
+        }) +
+
+        adminTabsComponent({
+
+            formContent: formHtml,
+
+            listContent: listHtml
+
+        }) +
+
         '</div>';
 
-    configurarComportamentoAbas();
+    /* ======================
+       CONTROLLERS
+    ====================== */
 
-    if (idView === 'view-home') {
+    if (idView === "view-home") {
+
         carregarModuloHome();
-    } else if (idView === 'view-categorias') {
-        carregarModuloCategorias();
-    } else if (idView === 'view-produtos') {
-        carregarModuloProdutos();
-    } else if (idView === 'view-about') {
-        carregarModuloAbout();
+
     }
+
+    if (idView === "view-produtos") {
+
+        carregarModuloProdutos();
+
+    }
+
+    if (idView === "view-categorias") {
+
+        carregarModuloCategorias();
+
+    }
+
+    if (idView === "view-about") {
+
+        carregarModuloAbout();
+
+    }
+
 };
 
-// 5. Motor de Abas (Tabs)
-function renderizarEstruturaAbas(formHtml, listHtml) {
-    return '<div class="admin-tabs-container">' +
-               '<div class="admin-tabs">' +
-                   '<button id="btn-tab-form" class="admin-tab active">Cadastrar</button>' +
-                   '<button id="btn-tab-list" class="admin-tab">Consultar</button>' +
-               '</div>' +
-               '<div id="tab-content-form" class="tab-content active">' + formHtml + '</div>' +
-               '<div id="tab-content-list" class="tab-content" style="display:none;">' + listHtml + '</div>' +
-           '</div>';
-}
+/* ==========================================
+   VIEW PADRÃO
+========================================== */
 
-function configurarComportamentoAbas() {
-    var btnForm = document.getElementById("btn-tab-form");
-    var btnList = document.getElementById("btn-tab-list");
-    var contentForm = document.getElementById("tab-content-form");
-    var contentList = document.getElementById("tab-content-list");
-
-    if (btnForm && btnList && contentForm && contentList) {
-        btnForm.addEventListener("click", function() {
-            btnForm.className = "admin-tab active";
-            btnList.className = "admin-tab";
-            contentForm.style.display = "block";
-            contentList.style.display = "none";
-        });
-
-        btnList.addEventListener("click", function() {
-            btnForm.className = "admin-tab";
-            btnList.className = "admin-tab active";
-            contentForm.style.display = "none";
-            contentList.style.display = "block";
-        });
-    }
-}
-
-// Iniciar a primeira view (Home) por padrão
-window.mudarViewAdmin('view-home');
+window.mudarViewAdmin(
+    "view-home"
+);

@@ -1,4 +1,4 @@
-import { getProducts } from "../../products/services/productServices.js";
+import { getProducts } from "../services/productServices.js";
 
 export function featuredProductsComponent() {
 

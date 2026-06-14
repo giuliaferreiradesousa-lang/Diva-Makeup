@@ -89,7 +89,7 @@ function montarPaginaDoProduto() {
     conteudo.innerHTML =
       '<div class="pdp-error">' +
         '<h2>Produto não encontrado.</h2>' +
-        '<a href="../../home/pages/home.html" class="btn-voltar">Voltar para a Vitrine</a>' +
+        '<a href="' + window.location.origin + '/src/feature/home/pages/home.html" class="btn-voltar">Voltar para a Vitrine</a>' +
       '</div>';
     return;
   }
@@ -102,7 +102,7 @@ function montarPaginaDoProduto() {
     conteudo.innerHTML =
       '<div class="pdp-error">' +
         '<h2>Produto não encontrado.</h2>' +
-        '<a href="../../home/pages/home.html" class="btn-voltar">Voltar para a Vitrine</a>' +
+        '<a href="' + window.location.origin + '/src/feature/home/pages/home.html" class="btn-voltar">Voltar para a Vitrine</a>' +
       '</div>';
     return;
   }

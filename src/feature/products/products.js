@@ -11,7 +11,7 @@
    4. Ativar o botão "Adicionar ao Carrinho"
    ================================================ */
 
-import { getProductsWithCategory, updateProduct } from "./services/productServices.js";
+import { getProductsWithCategory } from "./services/productServices.js";
 import { initFavoriteEvents }      from "../favorites/favoriteEvents.js";
 import { isFavorite }              from "../favorites/services/favoriteService.js";
 import { addToCart }               from "../cart/components/CartDrawerComponent.js";
@@ -20,24 +20,6 @@ import { showToast }               from "../../shared/components/toast/toastComp
 import { navbarComponent }         from "../../shared/components/navbar/navbarComponent.js";
 import { footerComponent }         from "../../shared/components/footer/footerComponent.js";
 import { initNavbar }              from "../../shared/components/navbar/navbarController.js";
-import { getUserRole }             from "../../core/rolesManager.js";
-
-var roleUsuarioLogado = "cliente";
-function identificarRoleDoUsuario() {
-  var sessao = localStorage.getItem("usuarioLogado");
-  var email = "";
-  if (sessao) {
-    try {
-      var sessaoParsed = JSON.parse(sessao);
-      email = sessaoParsed.email;
-    } catch (e) {
-      email = sessao;
-    }
-  }
-  roleUsuarioLogado = getUserRole(email);
-}
-identificarRoleDoUsuario();
-
 
 /* --------------------------------------------------
    PARTE 1: MONTAR NAVBAR E FOOTER
@@ -80,33 +62,22 @@ function exibirProdutos() {
   for (var i = 0; i < produtos.length; i++) {
     var produto = produtos[i];
 
-    var htmlBotoesAdmin = "";
-    if (roleUsuarioLogado === "admin") {
-      htmlBotoesAdmin = 
-        '<div class="product-admin-actions">' +
-          '<button class="btn-edit-product" data-id="' + produto.id + '">' +
-            '<i class="fas fa-edit"></i> Alterar Produto' +
-          '</button>' +
-        '</div>';
-    }
 
     container.innerHTML = container.innerHTML +
       '<div class="product-card">' +
         '<div class="product-image-wrapper">' +
-          '<img src="' + produto.imagem + '" alt="' + produto.nome + '">' +
+          '<img src="' + window.location.origin + produto.imagem + '" alt="' + produto.nome + '">' +
           montarBotaoFavorito(produto.id) +
         '</div>' +
         '<h3>' + produto.nome + '</h3>' +
         '<p>' + produto.descricao + '</p>' +
         '<small>Categoria: ' + produto.categoryName + '</small>' +
         '<span>R$ ' + Number(produto.preco).toFixed(2) + '</span>' +
-        '<button class="add-to-cart-btn" data-id="' + produto.id + '">Adicionar ao Carrinho</button>' +
-        htmlBotoesAdmin +
-      '</div>';
+        '<button class="add-to-cart-btn" data-id="' + produto.id + '">Adicionar ao Carrinho</button>' 
+        '</div>';
   }
 
   // Ativa os botões de editar se for admin
-  if (roleUsuarioLogado === "admin") {
     var btnEditElements = document.getElementsByClassName("btn-edit-product");
     for (var k = 0; k < btnEditElements.length; k++) {
       btnEditElements[k].addEventListener("click", function() {
@@ -132,24 +103,10 @@ function exibirProdutos() {
             { name: 'preco', label: 'Preço', type: 'number' },
             { name: 'imagem', label: 'URL da Imagem', type: 'text' }
         ];
-
-        if (window.exibirModalUpdate) {
-            window.exibirModalUpdate("Editar Produto", produtoAtual, camposFormulario, function(dadosAtualizados) {
-                if (dadosAtualizados.preco) {
-                    dadosAtualizados.preco = Number(dadosAtualizados.preco);
-                }
-                updateProduct(productId, dadosAtualizados);
-                showToast("Produto atualizado com sucesso!", "success");
-                exibirProdutos(); 
-                ativarBotoesDeCarrinho(); 
-            });
-        } else {
-            showToast("Componente de modal não encontrado", "error");
-        }
       });
     }
   }
-}
+
 
 exibirProdutos();
 

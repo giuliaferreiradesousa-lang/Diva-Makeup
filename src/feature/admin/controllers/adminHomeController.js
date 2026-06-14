@@ -1,5 +1,9 @@
 import { setStorageData, getStorageData } from "../../../core/storage.js";
 import { showToast } from "../../../shared/components/toast/toastComponent.js";
+import {
+    heroCardsComponent
+}
+from "../../home/components/heroCardsComponent.js";
 
 export function carregarModuloHome() {
     inicializarLogicaHome();
@@ -72,37 +76,41 @@ function carregarConfiguracoes() {
     renderizarSlidesAdmin();
 }
 
-function renderizarSlidesAdmin() {
-    var heroSlides = getStorageData("heroConfig");
-    if (!heroSlides || !Array.isArray(heroSlides)) {
+function renderizarSlidesAdmin(){
+
+    var heroSlides =
+        getStorageData("heroConfig");
+
+    if(
+        !heroSlides ||
+        !Array.isArray(heroSlides)
+    ){
         heroSlides = [];
     }
 
-    var adminSlidesList = document.getElementById("admin-slides-list");
-    if (!adminSlidesList) return;
-    
-    if (heroSlides.length === 0) {
-        adminSlidesList.innerHTML = "<p>Nenhum slide cadastrado.</p>";
+    var container =
+        document.getElementById(
+            "admin-slides-list"
+        );
+
+    if(!container){
         return;
     }
 
-    var htmlList = "";
-    for (var i = 0; i < heroSlides.length; i++) {
-        var slide = heroSlides[i];
-        htmlList += '<div class="admin-slide-card">' +
-            '<img src="' + (slide.imagem || 'https://via.placeholder.com/100x100?text=Sem+Imagem') + '" alt="' + slide.titulo + '">' +
-            '<div class="admin-slide-info">' +
-                '<h3>' + slide.titulo + '</h3>' +
-                '<p>' + slide.subtitulo + '</p>' +
-            '</div>' +
-            '<div class="admin-slide-actions">' +
-                '<button onclick="window.abrirModalEdicaoSlide(' + slide.id + ')" class="btn-edit">Editar</button>' +
-                '<button onclick="window.excluirSlideAdmin(' + slide.id + ')" class="btn-delete">Excluir</button>' +
-            '</div>' +
-        '</div>';
+    if(heroSlides.length === 0){
+
+        container.innerHTML =
+            '<p>Nenhum slide cadastrado.</p>';
+
+        return;
+
     }
-    
-    adminSlidesList.innerHTML = htmlList;
+
+    container.innerHTML =
+        heroCardsComponent(
+            heroSlides
+        );
+
 }
 
 window.excluirSlideAdmin = function(id) {

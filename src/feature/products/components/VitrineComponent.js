@@ -1,4 +1,4 @@
-import { getProductsWithCategory } from "../../products/services/productServices.js";
+import { getProductsWithCategory } from "../services/productServices.js";
 
 export async function VitrineComponent() {
   const products = await getProductsWithCategory();

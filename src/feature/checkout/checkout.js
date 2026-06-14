@@ -89,7 +89,7 @@ function verificarLogin() {
     showToast("Acesso restrito. Faça login para finalizar sua compra.", "error");
 
     setTimeout(function() {
-      window.location.href = "../../auth/pages/login.html";
+      window.location.href = window.location.origin + "/src/feature/auth/pages/login.html";
     }, 2000);
 
     return false;
@@ -288,7 +288,7 @@ function iniciarComportamentosDoFormulario() {
         showToast("Pedido realizado com sucesso!", "success");
 
         setTimeout(function() {
-          window.location.href = window.location.origin + "/diva/src/feature/home/pages/home.html";
+          window.location.href = window.location.origin + "/src/feature/home/pages/home.html";
         }, 2000);
 
       } catch (erro) {

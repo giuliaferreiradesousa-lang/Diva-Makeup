@@ -1,0 +1,240 @@
+:root{
+
+    --color-primary:#b34d68;
+    --color-primary-dark:#923a52;
+
+    --color-border:#dbe2ea;
+
+    --color-text:#2d3748;
+
+    --color-muted:#718096;
+
+    --color-bg:#ffffff;
+
+}
+
+/* ==========================
+   FORM GROUP
+========================== */
+
+.diva-form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+    margin-bottom:20px;
+
+}
+
+/* ==========================
+   LABEL
+========================== */
+
+.diva-form-label{
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+    color:var(--color-text);
+
+}
+
+/* ==========================
+   INPUT
+========================== */
+
+.diva-form-input,
+.diva-form-textarea,
+.diva-form-select{
+
+    width:100%;
+
+    border:1.5px solid var(--color-border);
+
+    border-radius:12px;
+
+    background:white;
+
+    padding:14px 16px;
+
+    font-size:.95rem;
+
+    color:var(--color-text);
+
+    transition:.2s;
+
+    outline:none;
+
+}
+
+/* ==========================
+   FOCUS
+========================== */
+
+.diva-form-input:focus,
+.diva-form-textarea:focus,
+.diva-form-select:focus{
+
+    border-color:var(--color-primary);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(179,77,104,.12);
+
+}
+
+/* ==========================
+   TEXTAREA
+========================== */
+
+.diva-form-textarea{
+
+    resize:vertical;
+
+    min-height:120px;
+
+}
+
+/* ==========================
+   PLACEHOLDER
+========================== */
+
+.diva-form-input::placeholder,
+.diva-form-textarea::placeholder{
+
+    color:var(--color-muted);
+
+}
+
+/* ==========================
+   DESKTOP
+========================== */
+
+.diva-form-row{
+
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+
+}
+
+.diva-form-section{
+
+    margin-bottom:32px;
+
+}
+
+.diva-form-section-title{
+
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--color-text);
+
+    margin-bottom:20px;
+
+}
+
+.diva-form-file{
+
+    width:100%;
+
+    padding:14px;
+
+    border:2px dashed var(--color-border);
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+}
+
+.diva-checkbox,
+.diva-radio{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    cursor:pointer;
+
+}
+
+.diva-switch{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    cursor:pointer;
+
+}
+
+.diva-switch input{
+
+    display:none;
+
+}
+
+.diva-switch-slider{
+
+    width:46px;
+
+    height:24px;
+
+    background:#dbe2ea;
+
+    border-radius:999px;
+
+    position:relative;
+
+    transition:.2s;
+
+}
+
+.diva-switch-slider::before{
+
+    content:"";
+
+    width:18px;
+
+    height:18px;
+
+    background:white;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    top:3px;
+    left:3px;
+
+    transition:.2s;
+
+}
+
+
+
+@media(min-width:768px){
+
+    .diva-form-group{
+
+        margin-bottom:24px;
+
+    }
+
+    .diva-form-row{
+
+        flex-direction:row;
+
+    }
+
+
+}

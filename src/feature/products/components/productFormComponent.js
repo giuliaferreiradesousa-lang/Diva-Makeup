@@ -1,66 +1,134 @@
-/* =========================================================
-   COMPONENT: productFormComponent.js
-   Descrição: Gera a estrutura HTML limpa e semântica do 
-              formulário de cadastro de produtos.
-   ========================================================= */
+import { Form }
+  from "../../../shared/components/form/Form.js";
 
 export function productFormComponent() {
+
   return (
-    '<form id="product-form" class="admin-product-form">' +
-      '<div class="form-header">' +
-        '<h2>Novo Produto</h2>' +
-        '<p>Preencha os detalhes para publicar na loja virtual.</p>' +
-      '</div>' +
 
-      '<div class="form-grid">' +
-        /* Coluna da Esquerda: Upload de Imagem Personalizado */
-        '<div class="form-column image-upload-section">' +
-          '<label class="upload-area" for="product-image-input">' +
-            '<div id="upload-placeholder" class="upload-placeholder">' +
-              '<i class="fas fa-cloud-upload-alt"></i>' +
-              '<span>Toque para subir a foto</span>' +
-              '<small>Formatos aceitos: JPG, PNG (Máx 300KB)</small>' +
-            '</div>' +
-            '<img id="product-image-preview" class="image-preview" src="" style="display:none;">' +
+    '<form id="product-form">' +
+
+    Form.Section({
+
+      title: "Informações do Produto",
+
+      content:
+
+        Form.Row(
+
+          Form.File({
+
+            id: "product-image-input",
+
+            label: "Imagem",
+
+            accept: "image/*"
+
+          })
+
+        ) +
+
+        Form.Input({
+
+          id: "nome",
+
+          name: "nome",
+
+          label: "Nome do Produto",
+
+          placeholder:
+            "Ex: Batom Matte Velvet Rose",
+
+          required: true
+
+        }) +
+
+        Form.Row(
+
+          Form.Number({
+
+            id: "preco",
+
+            name: "preco",
+
+            label: "Preço",
+
+            placeholder: "0,00",
+
+            required: true
+
+          }) +
+
+          '<div class="diva-form-group">' +
+
+          '<label class="diva-form-label">' +
+
+          'Categoria' +
+
           '</label>' +
-          '<input type="file" id="product-image-input" accept="image/*" required style="display:none;">' +
-        '</div>' +
 
-        /* Coluna da Direita: Informações de Cadastro */
-        '<div class="form-column details-section">' +
-          '<div class="input-group">' +
-            '<label for="nome">Nome do Produto</label>' +
-            '<input type="text" id="nome" placeholder="Ex: Batom Matte Velvet Rose" required>' +
+          '<div class="custom-dropdown">' +
+
+          '<div id="category-dropdown-header" class="dropdown-header">' +
+
+          'Selecione ▼' +
+
           '</div>' +
 
-          /* Linha com Preço e Categoria lado a lado */
-          '<div class="input-row">' +
-            '<div class="input-group flex-1">' +
-              '<label for="preco">Preço (R$)</label>' +
-              '<input type="number" id="preco" step="0.01" placeholder="0,00" required>' +
-            '</div>' +
-            
-            '<div class="input-group flex-1">' +
-              '<label>Categoria</label>' +
-              '<div class="custom-dropdown" id="custom-category-dropdown">' +
-                '<div class="dropdown-header" id="category-dropdown-header">Selecione ▼</div>' +
-                '<div class="dropdown-list" id="category-dropdown-list">' +
-                  '' +
-                '</div>' +
-              '</div>' +
-            '</div>' +
+          '<div id="category-dropdown-list" class="dropdown-list">' +
+
           '</div>' +
 
-          '<div class="input-group">' +
-            '<label for="descricao">Descrição Detalhada</label>' +
-            '<textarea id="descricao" placeholder="Descreva os principais benefícios, diferenciais e composição..." required></textarea>' +
           '</div>' +
 
-          '<button type="submit" class="btn-save-product">' +
-            '<i class="fas fa-check"></i> Salvar e Publicar Produto' +
-          '</button>' +
-        '</div>' +
-      '</div>' +
+          '</div>'
+
+        ) +
+
+        Form.Textarea({
+
+          id: "descricao",
+
+          label: "Descrição",
+
+          placeholder:
+            "Descreva o produto"
+
+        }) +
+
+        Form.Textarea({
+
+          id: "modoUso",
+
+          label: "Modo de Uso",
+
+          placeholder:
+            "Ex: Aplicar duas vezes ao dia"
+
+        }) +
+
+        Form.Textarea({
+
+          id: "ingredientes",
+
+          label: "Ingredientes",
+
+          placeholder:
+            "Ex: Água, Glicerina..."
+
+        })
+
+    }) +
+
+    Form.Button({
+
+      type: "submit",
+
+      text: "Salvar Produto"
+
+    }) +
+
     '</form>'
+
   );
+
 }
