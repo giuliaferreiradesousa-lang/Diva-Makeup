@@ -1,36 +1,32 @@
-export function renderCategories(
-  categories,
-  containerId
-) {
+/* =========================================================
+   COMPONENT: categoryListComponent.js
+   Descrição: Acopla os dados de categorias ao componente 
+              genérico reutilizável de dataTable.
+   ========================================================= */
 
-  const container =
-    document.getElementById(containerId);
+import { renderDataTable } from "../../../shared/components/dataTable/dataTableComponent.js";
 
-  container.innerHTML = "";
-
-  categories.forEach(category => {
-
-    container.innerHTML += `
-
-      <article class="category-card">
-
-        <img
-          src="${category.imagem}"
-          alt="${category.nome}"
-        >
-
-        <div class="category-content">
-
-          <h3>${category.nome}</h3>
-
-          <p>${category.descricao}</p>
-
-        </div>
-
-      </article>
-
-    `;
-
-  });
-
+export function categoryListComponent(categories) {
+    return renderDataTable({
+        columns: [
+            {
+                key: "imagem",
+                label: "Imagem",
+                type: "image"
+            },
+            {
+                key: "nome",
+                label: "Nome"
+            },
+            {
+                key: "descricao",
+                label: "Descrição"
+            }
+        ],
+        data: categories,
+        actions: {
+            edit: true,
+            delete: true
+        }
+    });
 }

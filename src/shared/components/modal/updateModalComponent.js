@@ -1,7 +1,6 @@
 /**
- * Componente de Modal Dinâmico para Atualização/Edição
- * 
- * Regras aplicadas:
+ * Componente de Modal Genérico para Operações do CRUD (Update e Delete)
+ * * Regras mantidas:
  * 1. Proibido uso de Arrow Functions (=>)
  * 2. Proibido métodos modernos de array (.map, .filter, etc) - Uso exclusivo de 'for'/'while'
  * 3. Proibido desestruturação complexa
@@ -9,20 +8,29 @@
  */
 
 /**
- * Exibe um modal dinâmico para edição de registros.
- * 
- * @param {string} titulo O título que aparecerá no cabeçalho do modal.
- * @param {Object} dadosObjeto Os dados atuais do item.
- * @param {Array} camposFormulario Configuração dos campos (ex: [{name: 'nome', label: 'Nome', type: 'text'}]).
- * @param {Function} callbackSalvar Função executada ao clicar em salvar, recebendo o objeto atualizado.
+ * Exibe um modal genérico baseado em configurações estruturadas.
+ * * @param {Object} config Objeto de configuração do modal.
+ * @param {string} config.tipo Tipo do modal: 'update' ou 'delete'.
+ * @param {string} config.titulo O título que aparecerá no cabeçalho do modal.
+ * @param {Object} config.dadosObjeto Os dados atuais do item (ex: o produto completo).
+ * @param {Array} config.camposFormulario Campos do formulário (apenas para tipo 'update').
+ * @param {string} config.mensagemDeletar Mensagem customizada de exclusão (apenas para tipo 'delete').
+ * @param {Function} config.callbackConfirmar Função executada ao salvar ou confirmar a exclusão.
  */
-function exibirModalUpdate(titulo, dadosObjeto, camposFormulario, callbackSalvar) {
+function exibirModal(config) {
+    // Extração segura de propriedades (sem desestruturação complexa)
+    var tipo = config.tipo || 'update';
+    var titulo = config.titulo || 'Confirmação';
+    var dadosObjeto = config.dadosObjeto;
+    var camposFormulario = config.camposFormulario || [];
+    var mensagemDeletar = config.mensagemDeletar || 'Tem certeza que deseja remover este registro?';
+    var callbackConfirmar = config.callbackConfirmar;
+
     // 1. Criação do overlay (fundo escuro)
     var overlay = document.createElement('div');
     overlay.className = 'diva-modal-overlay';
-    
-    // Fechar ao clicar no overlay
-    overlay.addEventListener('click', function(event) {
+
+    overlay.addEventListener('click', function (event) {
         if (event.target === overlay) {
             fecharModal(overlay);
         }
@@ -43,7 +51,7 @@ function exibirModalUpdate(titulo, dadosObjeto, camposFormulario, callbackSalvar
     var closeIcon = document.createElement('button');
     closeIcon.className = 'diva-modal-close-icon';
     closeIcon.innerHTML = '&times;';
-    closeIcon.addEventListener('click', function() {
+    closeIcon.addEventListener('click', function () {
         fecharModal(overlay);
     });
 
@@ -51,43 +59,48 @@ function exibirModalUpdate(titulo, dadosObjeto, camposFormulario, callbackSalvar
     header.appendChild(closeIcon);
     modalBox.appendChild(header);
 
-    // 4. Corpo do modal (Formulário dinâmico)
+    // 4. Corpo do modal (Condicional baseado no tipo)
     var body = document.createElement('div');
     body.className = 'diva-modal-body';
 
-    // Array para guardar referência dos inputs e seus nomes para facilitar a coleta depois
     var inputsReferencia = [];
 
-    // Laço de repetição tradicional (for) para criar os campos dinamicamente
-    for (var i = 0; i < camposFormulario.length; i++) {
-        var configCampo = camposFormulario[i];
-        
-        var fieldGroup = document.createElement('div');
-        fieldGroup.className = 'diva-modal-field-group';
+    if (tipo === 'delete') {
+        // Se for deleção, injeta apenas o texto explicativo de confirmação
+        var textMessage = document.createElement('p');
+        textMessage.className = 'diva-modal-text';
+        textMessage.textContent = mensagemDeletar;
+        body.appendChild(textMessage);
+    } else {
+        // Se for update, monta a estrutura de formulário dinâmico
+        for (var i = 0; i < camposFormulario.length; i++) {
+            var configCampo = camposFormulario[i];
 
-        var label = document.createElement('label');
-        label.className = 'diva-modal-label';
-        label.textContent = configCampo.label;
+            var fieldGroup = document.createElement('div');
+            fieldGroup.className = 'diva-modal-field-group';
 
-        var input = document.createElement('input');
-        input.className = 'diva-modal-input';
-        input.type = configCampo.type || 'text';
-        input.name = configCampo.name;
+            var label = document.createElement('label');
+            label.className = 'diva-modal-label';
+            label.textContent = configCampo.label;
 
-        // Preenche o valor se existir em dadosObjeto
-        if (dadosObjeto && dadosObjeto[configCampo.name] !== undefined) {
-            input.value = dadosObjeto[configCampo.name];
+            var input = document.createElement('input');
+            input.className = 'diva-modal-input';
+            input.type = configCampo.type || 'text';
+            input.name = configCampo.name;
+
+            if (dadosObjeto && dadosObjeto[configCampo.name] !== undefined) {
+                input.value = dadosObjeto[configCampo.name];
+            }
+
+            fieldGroup.appendChild(label);
+            fieldGroup.appendChild(input);
+            body.appendChild(fieldGroup);
+
+            inputsReferencia.push({
+                name: configCampo.name,
+                element: input
+            });
         }
-
-        fieldGroup.appendChild(label);
-        fieldGroup.appendChild(input);
-        body.appendChild(fieldGroup);
-
-        // Guardando referência
-        inputsReferencia.push({
-            name: configCampo.name,
-            element: input
-        });
     }
 
     modalBox.appendChild(body);
@@ -99,60 +112,72 @@ function exibirModalUpdate(titulo, dadosObjeto, camposFormulario, callbackSalvar
     var btnCancel = document.createElement('button');
     btnCancel.className = 'diva-modal-btn diva-modal-btn-cancel';
     btnCancel.textContent = 'Cancelar';
-    btnCancel.addEventListener('click', function() {
+    btnCancel.addEventListener('click', function () {
         fecharModal(overlay);
     });
 
-    var btnSave = document.createElement('button');
-    btnSave.className = 'diva-modal-btn diva-modal-btn-save';
-    btnSave.textContent = 'Salvar';
-    btnSave.addEventListener('click', function() {
-        var dadosAtualizados = {};
+    var btnAction = document.createElement('button');
 
-        // Laço tradicional para capturar os dados dos inputs
-        for (var j = 0; j < inputsReferencia.length; j++) {
-            var ref = inputsReferencia[j];
-            dadosAtualizados[ref.name] = ref.element.value;
-        }
+    // Altera a cor e o texto do botão principal dependendo da ação
+    if (tipo === 'delete') {
+        btnAction.className = 'diva-modal-btn diva-modal-btn-danger';
+        btnAction.textContent = 'Excluir';
+    } else {
+        btnAction.className = 'diva-modal-btn diva-modal-btn-save';
+        btnAction.textContent = 'Salvar';
+    }
 
-        // Mesclando dados originais com atualizados via for..in (evitando spread {...})
-        var objetoFinal = {};
-        if (dadosObjeto) {
-            for (var keyOriginal in dadosObjeto) {
-                if (dadosObjeto.hasOwnProperty(keyOriginal)) {
-                    objetoFinal[keyOriginal] = dadosObjeto[keyOriginal];
+    btnAction.addEventListener('click', function () {
+        if (tipo === 'delete') {
+            // Deleção: Retorna diretamente o objeto original selecionado para o callback tratar
+            if (callbackConfirmar) {
+                callbackConfirmar(dadosObjeto);
+            }
+            fecharModal(overlay);
+        } else {
+            // Edição: Coleta dados atualizados e mescla
+            var dadosAtualizados = {};
+
+            for (var j = 0; j < inputsReferencia.length; j++) {
+                var ref = inputsReferencia[j];
+                dadosAtualizados[ref.name] = ref.element.value;
+            }
+
+            var objetoFinal = {};
+            if (dadosObjeto) {
+                for (var keyOriginal in dadosObjeto) {
+                    if (dadosObjeto.hasOwnProperty(keyOriginal)) {
+                        objetoFinal[keyOriginal] = dadosObjeto[keyOriginal];
+                    }
                 }
             }
-        }
-        
-        for (var keyAtualizada in dadosAtualizados) {
-            if (dadosAtualizados.hasOwnProperty(keyAtualizada)) {
-                objetoFinal[keyAtualizada] = dadosAtualizados[keyAtualizada];
-            }
-        }
 
-        callbackSalvar(objetoFinal);
-        fecharModal(overlay);
+            for (var keyAtualizada in dadosAtualizados) {
+                if (dadosAtualizados.hasOwnProperty(keyAtualizada)) {
+                    objetoFinal[keyAtualizada] = dadosAtualizados[keyAtualizada];
+                }
+            }
+
+            if (callbackConfirmar) {
+                callbackConfirmar(objetoFinal);
+            }
+            fecharModal(overlay);
+        }
     });
 
     footer.appendChild(btnCancel);
-    footer.appendChild(btnSave);
+    footer.appendChild(btnAction);
     modalBox.appendChild(footer);
 
-    // Adiciona a caixa ao overlay e o overlay ao body
     overlay.appendChild(modalBox);
     document.body.appendChild(overlay);
 }
 
-/**
- * Função utilitária para fechar o modal
- * @param {HTMLElement} modalElement Elemento do overlay a ser removido do DOM
- */
 function fecharModal(modalElement) {
     if (modalElement && modalElement.parentNode) {
         modalElement.parentNode.removeChild(modalElement);
     }
 }
 
-// Disponibiliza no objeto global window para uso como componente isolado
-window.exibirModalUpdate = exibirModalUpdate;
+// Expõe globalmente
+window.exibirModal = exibirModal;

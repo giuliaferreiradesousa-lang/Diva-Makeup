@@ -1,6 +1,6 @@
 import { heroComponent } from "./heroComponent.js";
-import { categoryComponent } from "./categoryComponent.js";
-import { VitrineComponent } from "./VitrineComponent.js";
+import { VitrineComponent } from "../../products/components/vitrineComponent.js";
+import { categoryComponent } from "../../categories/components/categoryComponent.js";
 
 export async function homeContentComponent() {
     const vitrineHtml = await VitrineComponent();

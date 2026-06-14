@@ -1,12 +1,16 @@
-/* ================================================
-   ADMINABOUTCONTROLLER.JS — Controller de Imagens About
-   ================================================ */
+/* =========================================================
+   CONTROLLER: adminAboutController.js
+   Descrição: Orquestra o upload, renderização e acionamento
+              de modais da feature Sobre Nós.
+   ========================================================= */
 
-import { setStorageData, getStorageData } from "../../../core/storage.js";
+import { getAboutImages, createAboutImage, deleteAboutImage } from "../../about/services/aboutService.js";
 import { showToast } from "../../../shared/components/toast/toastComponent.js";
+import { renderAboutCardsHtml } from "../../about/components/aboutListComponent.js";
 
 export function carregarModuloAbout() {
     inicializarLogicaAbout();
+    configurarAcoesAbout(); // Ativa a delegação de eventos para cliques
     renderizarImagensAbout();
 }
 
@@ -34,7 +38,6 @@ function inicializarLogicaAbout() {
 
     aboutForm.addEventListener("submit", function(evento) {
         evento.preventDefault();
-
         var altValor = inputAlt.value.trim();
 
         if (!base64Image) {
@@ -42,11 +45,9 @@ function inicializarLogicaAbout() {
             return;
         }
 
-        var aboutImages = getStorageData("aboutImagesConfig");
-        if (!aboutImages || !Array.isArray(aboutImages)) {
-            aboutImages = [];
-        }
+        var aboutImages = getAboutImages();
 
+        // Regra de Negócio: Limite máximo de 1 imagem para esta seção
         if (aboutImages.length >= 1) {
             showToast("O limite máximo é de 1 imagem para o Sobre Nós. Exclua a imagem atual para adicionar uma nova.", 4000, "error");
             return;
@@ -58,8 +59,7 @@ function inicializarLogicaAbout() {
             url: base64Image
         };
 
-        aboutImages.push(novaImagem);
-        setStorageData("aboutImagesConfig", aboutImages);
+        createAboutImage(novaImagem);
         showToast("Imagem adicionada com sucesso!", 3000);
 
         aboutForm.reset();
@@ -70,49 +70,62 @@ function inicializarLogicaAbout() {
 }
 
 function renderizarImagensAbout() {
-    var aboutImages = getStorageData("aboutImagesConfig");
-    if (!aboutImages || !Array.isArray(aboutImages)) {
-        aboutImages = [];
-    }
-
+    var aboutImages = getAboutImages();
     var adminAboutList = document.getElementById("admin-about-list");
     if (!adminAboutList) return;
     
     if (aboutImages.length === 0) {
-        adminAboutList.innerHTML = "<p>Nenhuma imagem cadastrada na seção Sobre.</p>";
+        adminAboutList.innerHTML = "<p style='color:#666; padding: 12px;'>Nenhuma imagem cadastrada na seção Sobre.</p>";
         return;
     }
 
-    var htmlList = "";
-    for (var i = 0; i < aboutImages.length; i++) {
-        var img = aboutImages[i];
-        htmlList += '<div class="admin-slide-card" style="display:flex; align-items:center; gap:15px; margin-bottom:15px; padding:15px; border:1px solid #ddd; border-radius:8px;">' +
-            '<img src="' + img.url + '" alt="' + img.alt + '" style="width:100px; height:100px; object-fit:cover; border-radius:8px;">' +
-            '<div class="admin-slide-info" style="flex:1;">' +
-                '<h3>' + img.alt + '</h3>' +
-            '</div>' +
-            '<div class="admin-slide-actions">' +
-                '<button onclick="window.excluirImagemAbout(' + img.id + ')" class="btn-delete" style="background-color:#e74c3c; color:#fff; border:none; padding:8px 12px; border-radius:4px; cursor:pointer;">Excluir</button>' +
-            '</div>' +
-        '</div>';
-    }
-    
-    adminAboutList.innerHTML = htmlList;
+    // Injeta a string de HTML estruturada gerada pelo componente
+    adminAboutList.innerHTML = renderAboutCardsHtml(aboutImages);
 }
 
-window.excluirImagemAbout = function(id) {
-    var aboutImages = getStorageData("aboutImagesConfig");
-    if (!aboutImages || !Array.isArray(aboutImages)) return;
-    
-    if (confirm("Tem certeza que deseja excluir esta imagem?")) {
+/**
+ * Escuta os cliques de exclusão de forma centralizada por delegação de eventos no elemento pai
+ */
+function configurarAcoesAbout() {
+    var container = document.getElementById("admin-about-list");
+    if (!container) return;
+
+    container.addEventListener("click", function(event) {
+        var elementoClicado = event.target;
+
+        // Filtra para garantir que o clique ocorreu especificamente no botão de exclusão
+        if (!elementoClicado.classList.contains("about-btn-delete")) return;
+
+        var idImagem = elementoClicado.getAttribute("data-id");
+        var aboutImages = getAboutImages();
+        var imagemSelecionada = null;
+
+        // Laço tradicional para mapear a imagem alvo
         for (var i = 0; i < aboutImages.length; i++) {
-            if (aboutImages[i].id === id) {
-                aboutImages.splice(i, 1);
+            if (aboutImages[i].id == idImagem) {
+                imagemSelecionada = aboutImages[i];
                 break;
             }
         }
-        setStorageData("aboutImagesConfig", aboutImages);
-        showToast("Imagem excluída com sucesso!", 3000);
-        renderizarImagensAbout();
-    }
-};
+
+        if (!imagemSelecionada) return;
+
+        // FLUXO DE EXCLUSÃO USANDO O MODAL UNIFICADO
+        if (window.exibirModal) {
+            window.exibirModal({
+                tipo: "delete",
+                titulo: "Excluir Imagem institucional",
+                dadosObjeto: imagemSelecionada,
+                mensagemDeletar: 'Tem certeza que deseja remover a imagem do Sobre Nós com a descrição "' + imagemSelecionada.alt + '"?',
+                callbackConfirmar: function(midiaParaDeletar) {
+                    // Executa a remoção segura via Service
+                    deleteAboutImage(midiaParaDeletar.id);
+                    showToast("Imagem removida com sucesso!", 3000);
+                    
+                    // Atualiza a interface gráfica imediatamente
+                    renderizarImagensAbout();
+                }
+            });
+        }
+    });
+}

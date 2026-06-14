@@ -13,119 +13,170 @@ export function productFormComponent() {
 
       content:
 
-        Form.Row(
+        Form.Grid(
 
-          Form.File({
+          Form.Column({
 
-            id: "product-image-input",
+            size: 12,
 
-            label: "Imagem",
+            content:
 
-            accept: "image/*"
+              Form.File({
 
-          })
+                id: "product-image-input",
 
-        ) +
+                label: "Imagem do Produto",
 
-        Form.Input({
+                accept: "image/*"
 
-          id: "nome",
-
-          name: "nome",
-
-          label: "Nome do Produto",
-
-          placeholder:
-            "Ex: Batom Matte Velvet Rose",
-
-          required: true
-
-        }) +
-
-        Form.Row(
-
-          Form.Number({
-
-            id: "preco",
-
-            name: "preco",
-
-            label: "Preço",
-
-            placeholder: "0,00",
-
-            required: true
+              })
 
           }) +
 
-          '<div class="diva-form-group">' +
+          Form.Column({
 
-          '<label class="diva-form-label">' +
+            size: 12,
 
-          'Categoria' +
+            content:
 
-          '</label>' +
+              Form.Input({
 
-          '<div class="custom-dropdown">' +
+                id: "nome",
 
-          '<div id="category-dropdown-header" class="dropdown-header">' +
+                name: "nome",
 
-          'Selecione ▼' +
+                label: "Nome do Produto",
 
-          '</div>' +
+                placeholder:
+                  "Ex: Batom Matte Velvet Rose",
 
-          '<div id="category-dropdown-list" class="dropdown-list">' +
+                required: true
 
-          '</div>' +
+              })
 
-          '</div>' +
+          }) +
 
-          '</div>'
+          Form.Column({
 
-        ) +
+            size: 6,
 
-        Form.Textarea({
+            content:
 
-          id: "descricao",
+              Form.Number({
 
-          label: "Descrição",
+                id: "preco",
 
-          placeholder:
-            "Descreva o produto"
+                name: "preco",
 
-        }) +
+                label: "Preço",
 
-        Form.Textarea({
+                placeholder: "0,00",
 
-          id: "modoUso",
+                required: true
 
-          label: "Modo de Uso",
+              })
 
-          placeholder:
-            "Ex: Aplicar duas vezes ao dia"
+          }) +
 
-        }) +
+          Form.Column({
 
-        Form.Textarea({
+            size: 6,
 
-          id: "ingredientes",
+            content:
 
-          label: "Ingredientes",
+              Form.Select({
 
-          placeholder:
-            "Ex: Água, Glicerina..."
+                id: "categoria",
 
-        })
+                label: "Categoria",
+
+                options: [
+
+                  {
+                    value: "",
+                    label: "Selecione"
+                  }
+
+                ],
+
+                required: true
+
+              })
+
+          }) +
+
+          Form.Column({
+
+            size: 12,
+
+            content:
+
+              Form.Textarea({
+
+                id: "descricao",
+
+                label: "Descrição",
+
+                placeholder:
+                  "Descreva o produto"
+
+              })
+
+          }) +
+
+          Form.Column({
+
+            size: 6,
+
+            content:
+
+              Form.Textarea({
+
+                id: "modoUso",
+
+                label: "Modo de Uso",
+
+                placeholder:
+                  "Ex: Aplicar duas vezes ao dia"
+
+              })
+
+          }) +
+
+          Form.Column({
+
+            size: 6,
+
+            content:
+
+              Form.Textarea({
+
+                id: "ingredientes",
+
+                label: "Ingredientes",
+
+                placeholder:
+                  "Ex: Água, Glicerina..."
+
+              })
+
+          })
+
+        )
 
     }) +
 
-    Form.Button({
+    Form.Actions(
 
-      type: "submit",
+      Form.Button({
 
-      text: "Salvar Produto"
+        type: "submit",
 
-    }) +
+        text: "Salvar Produto"
+
+      })
+
+    ) +
 
     '</form>'
 

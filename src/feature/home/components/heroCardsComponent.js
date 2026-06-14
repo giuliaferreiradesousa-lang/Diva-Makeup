@@ -21,39 +21,27 @@ export function heroCardsComponent(slides){
             '<div class="admin-slide-info">' +
 
                 '<h3>' +
-
                     slide.titulo +
-
                 '</h3>' +
-
                 '<p>' +
-
                     slide.subtitulo +
-
                 '</p>' +
 
             '</div>' +
 
             '<div class="admin-slide-actions">' +
 
+                // AJUSTE: Classes e data-id padronizados (sem onclick inline)
                 '<button ' +
-                'class="btn-edit" ' +
-                'onclick="window.abrirModalEdicaoSlide(' +
-                slide.id +
-                ')">' +
-
+                'class="slide-btn slide-btn-edit" ' +
+                'data-id="' + slide.id + '">' +
                     'Editar' +
-
                 '</button>' +
 
                 '<button ' +
-                'class="btn-delete" ' +
-                'onclick="window.excluirSlideAdmin(' +
-                slide.id +
-                ')">' +
-
+                'class="slide-btn slide-btn-delete" ' +
+                'data-id="' + slide.id + '">' +
                     'Excluir' +
-
                 '</button>' +
 
             '</div>' +

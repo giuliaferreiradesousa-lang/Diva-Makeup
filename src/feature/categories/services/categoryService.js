@@ -1,91 +1,66 @@
-const STORAGE_KEY = "categories";
+/* =========================================================
+   SERVICE: categoryService.js
+   Descrição: Gerencia a persistência das categorias no 
+              LocalStorage utilizando laços tradicionais.
+   ========================================================= */
+
+var STORAGE_KEY = "categories";
 
 /* PEGAR TODAS CATEGORIAS */
 export function getCategories() {
-
-    const categories =
-        localStorage.getItem(STORAGE_KEY);
-
-    return categories
-        ? JSON.parse(categories)
-        : [];
-
+    var categories = localStorage.getItem(STORAGE_KEY);
+    return categories ? JSON.parse(categories) : [];
 }
 
 /* SALVAR TODAS CATEGORIAS */
 function saveCategories(categories) {
-
-    localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(categories)
-    );
-
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(categories));
 }
 
 /* CRIAR CATEGORIA */
 export function createCategory(category) {
-
-    const categories =
-        getCategories();
-
+    var categories = getCategories();
     categories.push(category);
-
     saveCategories(categories);
-
 }
 
 /* BUSCAR CATEGORIA POR ID */
 export function findCategoryById(id) {
-
-    const categories =
-        getCategories();
-
-    return categories.find(
-        category => category.id === id
-    );
-
+    var categories = getCategories();
+    for (var i = 0; i < categories.length; i++) {
+        if (categories[i].id == id) {
+            return categories[i];
+        }
+    }
+    return null;
 }
 
 /* ATUALIZAR CATEGORIA */
-export function updateCategory(
-    id,
-    updatedData
-) {
-
-    const categories =
-        getCategories();
-
-    const updatedCategories =
-        categories.map(category => {
-
-            if (category.id === id) {
-
-                return {
-                    ...category,
-                    ...updatedData
-                };
-
+export function updateCategory(id, updatedData) {
+    var categories = getCategories();
+    for (var i = 0; i < categories.length; i++) {
+        if (categories[i].id == id) {
+            // Mescla de propriedades usando for...in tradicional
+            for (var prop in updatedData) {
+                if (updatedData.hasOwnProperty(prop)) {
+                    categories[i][prop] = updatedData[prop];
+                }
             }
-
-            return category;
-
-        });
-
-    saveCategories(updatedCategories);
-
+            break;
+        }
+    }
+    saveCategories(categories);
 }
 
 /* DELETAR CATEGORIA */
 export function deleteCategory(id) {
+    var categories = getCategories();
+    var restantes = [];
 
-    const categories =
-        getCategories();
-
-    const filteredCategories =
-        categories.filter(
-            category => category.id !== id
-        );
-
-    saveCategories(filteredCategories);
-
+    for (var i = 0; i < categories.length; i++) {
+        if (categories[i].id != id) {
+            restantes.push(categories[i]);
+        }
+    }
+    saveCategories(restantes);
 }

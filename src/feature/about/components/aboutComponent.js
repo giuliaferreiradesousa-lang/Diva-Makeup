@@ -1,13 +1,11 @@
 /* ================================================
-   ABOUTCOMPONENT.JS — Componente da Página Sobre
+   ABOUTCOMPONENT.JS — Componente da Página Sobre (Puro)
    ================================================ */
 
-import { getStorageData } from "../../../core/storage.js";
-
-export function aboutComponent() {
-  var aboutImages = getStorageData("aboutImagesConfig");
+export function aboutComponent(aboutImages) {
   var htmlImages = "";
 
+  // A lógica agora apenas avalia o parâmetro recebido para montar a string HTML
   if (aboutImages && Array.isArray(aboutImages) && aboutImages.length > 0) {
     for (var i = 0; i < aboutImages.length; i++) {
       var img = aboutImages[i];
@@ -39,7 +37,7 @@ export function aboutComponent() {
     '<section id="contato" class="contact-section">' +
       '<div class="contact-container">' +
         '<h2>Fale Conosco</h2>' +
-        '<p>Tem alguma dúvida, sugestão ou elogio? Envie uma mensagem e retornaremos em breve.</p>' +
+        '<p>Tem alguma dúvida, sugerão ou elogio? Envie uma mensagem e retornaremos em breve.</p>' +
         '<form id="form-contato" class="contact-form">' +
           '<div class="form-group">' +
             '<label for="nome">Nome Completo</label>' +
