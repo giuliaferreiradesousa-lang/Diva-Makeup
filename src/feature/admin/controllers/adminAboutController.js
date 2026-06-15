@@ -75,11 +75,12 @@ function renderizarImagensAbout() {
     if (!adminAboutList) return;
     
     if (aboutImages.length === 0) {
-        adminAboutList.innerHTML = "<p style='color:#666; padding: 12px;'>Nenhuma imagem cadastrada na seção Sobre.</p>";
+        // Removido o estilo inline para respeitar a higienização visual do projeto
+        adminAboutList.innerHTML = '<p class="diva-empty-message">Nenhuma imagem cadastrada na seção Sobre.</p>';
         return;
     }
 
-    // Injeta a string de HTML estruturada gerada pelo componente
+    // Injeta a string de HTML estruturada baseada no componente da tabela genérica
     adminAboutList.innerHTML = renderAboutCardsHtml(aboutImages);
 }
 
@@ -93,14 +94,14 @@ function configurarAcoesAbout() {
     container.addEventListener("click", function(event) {
         var elementoClicado = event.target;
 
-        // Filtra para garantir que o clique ocorreu especificamente no botão de exclusão
-        if (!elementoClicado.classList.contains("about-btn-delete")) return;
+        // AJUSTE CRUCIAL: Modificado de 'about-btn-delete' para 'table-btn-delete' para alinhar com o HTML gerado pela renderDataTable
+        if (!elementoClicado.classList.contains("table-btn-delete")) return;
 
         var idImagem = elementoClicado.getAttribute("data-id");
         var aboutImages = getAboutImages();
         var imagemSelecionada = null;
 
-        // Laço tradicional para mapear a imagem alvo
+        // Laço tradicional para mapear a imagem alvo sem utilizar métodos modernos de Array
         for (var i = 0; i < aboutImages.length; i++) {
             if (aboutImages[i].id == idImagem) {
                 imagemSelecionada = aboutImages[i];
@@ -110,7 +111,7 @@ function configurarAcoesAbout() {
 
         if (!imagemSelecionada) return;
 
-        // FLUXO DE EXCLUSÃO USANDO O MODAL UNIFICADO
+        // FLUXO DE EXCLUSÃO USANDO O MODAL UNIFICADO DO SISTEMA
         if (window.exibirModal) {
             window.exibirModal({
                 tipo: "delete",

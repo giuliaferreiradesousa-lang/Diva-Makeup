@@ -1,109 +1,118 @@
-export function CheckoutComponent(cartItems, totals) {
-  const itemsHtml = cartItems.length === 0 
-    ? `<p class="empty-cart-message">Seu carrinho está vazio.</p>`
-    : cartItems.map(item => `
-      <div class="checkout-item">
-        <img src="${item.imagem}" alt="${item.nome}">
-        <div class="checkout-item-details">
-          <h4>${item.nome}</h4>
-          <p>Cor: ${item.corSelecionada}</p>
-          <p>Qtd: ${item.quantidade}</p>
-        </div>
-        <div class="checkout-item-price">
-          R$ ${(item.preco * item.quantidade).toFixed(2).replace('.', ',')}
-        </div>
-      </div>
-    `).join('');
+/* =========================================================
+   COMPONENT: CheckoutComponent.js
+   Descrição: Componente puro (stateless) responsável por retornar
+              o template string estruturado do checkout.
+   ========================================================= */
 
-  const totalValueFormatted = totals.totalValue.toFixed(2).replace('.', ',');
+import { Form } from "../../../shared/components/Form/Form.js";
 
-  return `
-    <div class="checkout-layout">
-      
-      <!-- Coluna 1: Formulário de Entrega e Pagamento -->
-      <section class="checkout-form-section">
-        <h2>Dados de Entrega</h2>
-        <form id="checkout-form">
-          <div class="form-group row">
-            <div class="input-wrapper">
-              <label for="cep">CEP</label>
-              <input type="text" id="cep" name="cep" placeholder="00000-000" required>
-            </div>
-            <div class="input-wrapper">
-              <label for="rua">Rua</label>
-              <input type="text" id="rua" name="rua" placeholder="Rua das Flores" required>
-            </div>
-          </div>
-          
-          <div class="form-group row">
-            <div class="input-wrapper">
-              <label for="numero">Número</label>
-              <input type="text" id="numero" name="numero" placeholder="123" required>
-            </div>
-            <div class="input-wrapper">
-              <label for="bairro">Bairro</label>
-              <input type="text" id="bairro" name="bairro" placeholder="Centro" required>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <div class="input-wrapper">
-              <label for="cidade">Cidade / Estado</label>
-              <input type="text" id="cidade" name="cidade" placeholder="São Paulo - SP" required>
-            </div>
-          </div>
+export function CheckoutComponent(props) {
+  // Garantia de fallbacks tradicionais para evitar desestruturações complexas
+  props = props || {};
+  var cartItems = props.cartItems || [];
+  var totals = props.totals || { totalValue: 0 };
 
-          <h2 class="payment-title">Forma de Pagamento</h2>
-          <div class="payment-options">
-            <label class="payment-option">
-              <input type="radio" name="pagamento" value="pix" checked>
-              <span class="payment-label">Pix</span>
-            </label>
-            <label class="payment-option">
-              <input type="radio" name="pagamento" value="cartao">
-              <span class="payment-label">Cartão de Crédito</span>
-            </label>
-          </div>
+  var itemsHtml = "";
 
-          <!-- Campos extras simulados para Cartão (ocultos por padrão) -->
-          <div id="credit-card-fields" class="credit-card-fields hidden">
-            <div class="form-group">
-              <input type="text" placeholder="Número do Cartão" id="cc-num">
-            </div>
-            <div class="form-group row">
-              <input type="text" placeholder="Validade (MM/AA)" id="cc-val">
-              <input type="text" placeholder="CVV" id="cc-cvv">
-            </div>
-          </div>
+  // Substituído o .map() e arrow function por um laço clássico for
+  if (cartItems.length === 0) {
+    itemsHtml = '<p class="empty-cart-message">Seu carrinho está vazio.</p>';
+  } else {
+    for (var i = 0; i < cartItems.length; i++) {
+      var item = cartItems[i];
+      var itemPriceTotal = (item.preco * item.quantidade).toFixed(2).replace('.', ',');
 
-          <button type="submit" class="btn-checkout" disabled>
-            Finalizar Pedido
-          </button>
-        </form>
-      </section>
+      itemsHtml +=
+        '<div class="checkout-item">' +
+        '<img src="' + item.imagem + '" alt="' + item.nome + '" onerror="this.src=\'https://via.placeholder.com/150?text=Diva+Makeup\'">' +
+        '<div class="checkout-item-details">' +
+        '<h4>' + item.nome + '</h4>' +
+        '<p>Cor: ' + item.corSelecionada + '</p>' +
+        '<p>Qtd: ' + item.quantidade + '</p>' +
+        '</div>' +
+        '<div class="checkout-item-price">' +
+        'R$ ' + itemPriceTotal +
+        '</div>' +
+        '</div>';
+    }
+  }
 
-      <!-- Coluna 2: Resumo do Pedido -->
-      <aside class="checkout-summary-section">
-        <h2>Resumo do Pedido</h2>
-        <div class="checkout-items-container">
-          ${itemsHtml}
-        </div>
-        <div class="checkout-totals">
-          <div class="totals-row">
-            <span>Subtotal</span>
-            <span>R$ ${totalValueFormatted}</span>
-          </div>
-          <div class="totals-row">
-            <span>Frete</span>
-            <span>Grátis</span>
-          </div>
-          <div class="totals-row total-final">
-            <span>Total</span>
-            <span>R$ ${totalValueFormatted}</span>
-          </div>
-        </div>
-      </aside>
+  var totalValueFormatted = totals.totalValue.toFixed(2).replace('.', ',');
 
-    </div>
-  `;
+  // 1. Construção declarativa dos campos de entrega usando o motor Form
+  var cepInput = Form.Input({ id: "cep", name: "cep", label: "CEP", placeholder: "00000-000", required: true });
+  var ruaInput = Form.Input({ id: "rua", name: "rua", label: "Rua", placeholder: "Rua das Flores", required: true });
+  var numeroInput = Form.Input({ id: "numero", name: "numero", label: "Número", placeholder: "123", required: true });
+  var bairroInput = Form.Input({ id: "bairro", name: "bairro", label: "Bairro", placeholder: "Centro", required: true });
+  var cidadeInput = Form.Input({ id: "cidade", name: "cidade", label: "Cidade / Estado", placeholder: "São Paulo - SP", required: true });
+
+  // 2. Agrupamento em colunas estruturadas e linhas de Grid responsivo
+  var row1 = Form.Grid(Form.Column({ size: 6, content: cepInput }) + Form.Column({ size: 6, content: ruaInput }));
+  var row2 = Form.Grid(Form.Column({ size: 6, content: numeroInput }) + Form.Column({ size: 6, content: bairroInput }));
+  var row3 = Form.Grid(Form.Column({ size: 12, content: cidadeInput }));
+
+  // 3. Opções de pagamento geradas a partir do componente purificado Form.Radio
+  var radioPix = Form.Radio({ name: "pagamento", value: "pix", label: "Pix", checked: true });
+  var radioCard = Form.Radio({ name: "pagamento", value: "cartao", label: "Cartão de Crédito" });
+  var paymentOptionsHtml = '<div class="payment-options">' + radioPix + radioCard + '</div>';
+
+  // 4. Campos extras ocultos para inserção de dados do Cartão de Crédito
+  var ccNum = Form.Input({ id: "cc-num", placeholder: "Número do Cartão" });
+  var ccVal = Form.Input({ id: "cc-val", placeholder: "Validade (MM/AA)" });
+  var ccCvv = Form.Input({ id: "cc-cvv", placeholder: "CVV" });
+
+  var ccFieldsHtml =
+    '<div id="credit-card-fields" class="credit-card-fields hidden">' +
+    Form.Grid(Form.Column({ size: 12, content: ccNum })) +
+    Form.Grid(Form.Column({ size: 6, content: ccVal }) + Form.Column({ size: 6, content: ccCvv })) +
+    '</div>';
+
+  // 5. Botão de submissão padronizado
+  var submitButton = Form.Button({
+    type: "submit",
+    className: "btn-checkout",
+    text: "Finalizar Pedido",
+    icon: '<i class="fas fa-lock"></i> '
+  });
+
+  // Injeta o estado 'disabled' inicial em conformidade com as propriedades do botão nativo
+  submitButton = submitButton.replace('<button', '<button disabled');
+
+  return (
+    '<div class="checkout-layout">' +
+    '' +
+    '<section class="checkout-form-section">' +
+    '<h2>Dados de Entrega</h2>' +
+    '<form id="checkout-form">' +
+    row1 + row2 + row3 +
+    '<h2 class="payment-title">Forma de Pagamento</h2>' +
+    paymentOptionsHtml +
+    ccFieldsHtml +
+    Form.Actions(submitButton) +
+    '</form>' +
+    '</section>' +
+
+    '' +
+    '<aside class="checkout-summary-section">' +
+    '<h2>Resumo do Pedido</h2>' +
+    '<div class="checkout-items-container">' +
+    itemsHtml +
+    '</div>' +
+    '<div class="checkout-totals">' +
+    '<div class="totals-row">' +
+    '<span>Subtotal</span>' +
+    '<span>R$ ' + totalValueFormatted + '</span>' +
+    '</div>' +
+    '<div class="totals-row">' +
+    '<span>Frete</span>' +
+    '<span>Grátis</span>' +
+    '</div>' +
+    '<div class="totals-row total-final">' +
+    '<span>Total</span>' +
+    '<span>R$ ' + totalValueFormatted + '</span>' +
+    '</div>' +
+    '</div>' +
+    '</aside>' +
+    '</div>'
+  );
 }

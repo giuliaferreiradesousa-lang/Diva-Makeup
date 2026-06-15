@@ -55,10 +55,7 @@ export function carregarModuloCategorias() {
         });
     }
 
-    // Configura a escuta centralizada de cliques na tabela
     configurarAcoesDasCategorias();
-
-    // Renderiza a listagem inicial
     renderListaCategorias();
 }
 
@@ -68,11 +65,11 @@ function renderListaCategorias() {
     if (!listContainer) return;
 
     if (categorias.length === 0) {
-        listContainer.innerHTML = "<p style='color:#666; padding: 12px;'>Nenhuma categoria cadastrada.</p>";
+        // Higienizado: Removido o estilo inline para herdar classes globais de feedback do painel
+        listContainer.innerHTML = '<p class="diva-empty-message">Nenhuma categoria cadastrada.</p>';
         return;
     }
 
-    // Renderiza usando o componente reutilizável padronizado
     listContainer.innerHTML = categoryListComponent(categorias);
 }
 
@@ -83,23 +80,21 @@ function configurarAcoesDasCategorias() {
     container.addEventListener("click", function (event) {
         var elementoClicado = event.target;
 
-        // Filtra apenas cliques nos botões de ação da DataTable
         if (!elementoClicado.classList.contains("table-btn")) return;
 
         var idCategoria = elementoClicado.getAttribute("data-id");
-        var categorias = getCategories();
+        var categoriesList = getCategories();
         var categoriaSelecionada = null;
 
-        for (var i = 0; i < categorias.length; i++) {
-            if (categorias[i].id == idCategoria) {
-                categoriaSelecionada = categorias[i];
+        for (var i = 0; i < categoriesList.length; i++) {
+            if (categoriesList[i].id == idCategoria) {
+                categoriaSelecionada = categoriesList[i];
                 break;
             }
         }
 
         if (!categoriaSelecionada) return;
 
-        // AÇÃO: ATUALIZAR CATEGORIA (UPDATE)
         if (elementoClicado.classList.contains("table-btn-edit")) {
             if (window.exibirModal) {
                 window.exibirModal({
@@ -117,14 +112,13 @@ function configurarAcoesDasCategorias() {
                         }
 
                         updateCategory(idCategoria, dadosAtualizados);
-                        showToast("Categoria atualizada com sucesso!", 3000);
+                        showToast("Categoria updated com sucesso!", 3000);
                         renderListaCategorias();
                     }
                 });
             }
         }
 
-        // AÇÃO: REMOVER CATEGORIA (DELETE)
         if (elementoClicado.classList.contains("table-btn-delete")) {
             if (window.exibirModal) {
                 window.exibirModal({
