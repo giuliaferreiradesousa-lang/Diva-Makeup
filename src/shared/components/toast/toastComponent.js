@@ -1,0 +1,61 @@
+/**
+ * ================================================
+ * TOASTCOMPONENT.JS — Alertas na Tela
+ *
+ * Boa Prática (Manipulação Limpa do DOM e Temporizadores):
+ * O toast é gerado dinamicamente e, para evitar problemas de performance,
+ * ele se auto-destrói do DOM após o tempo determinado (uso de setTimeout).
+ * ================================================
+ */
+
+/**
+ * Cria e exibe uma mensagem flutuante (Toast) na tela.
+ * Boa Prática (Gerenciamento de Memória DOM): A função primeiro procura e destrói 
+ * instâncias antigas do toast antes de criar um novo, evitando vazamento de memória e sobreposição de divs.
+ * @param {string} mensagem - Texto a ser exibido.
+ * @param {number} [duracao=3000] - Tempo em milissegundos para sumir.
+ */
+export function showToast(mensagem, duracao) {
+  // Se não passarem a duração, define 3000 milissegundos (3 segundos)
+  if (!duracao) {
+    duracao = 3000;
+  }
+
+  // Verifica se já existe um aviso na tela
+  var avisoAntigo = document.querySelector(".toast");
+
+  // Se existir, remove o antigo para não encavalar
+  if (avisoAntigo) {
+    avisoAntigo.remove();
+  }
+
+  // Cria um novo elemento div para o aviso
+  var aviso = document.createElement("div");
+
+  // Coloca a classe CSS que dá a aparência de toast
+  aviso.className = "toast";
+
+  // Coloca o texto da mensagem dentro da div
+  aviso.textContent = mensagem;
+
+  // Adiciona a div no final do corpo da página (body)
+  document.body.appendChild(aviso);
+
+  // Espera uma fração de segundo e adiciona a classe "show"
+  // para fazer a animação de entrada (surgir na tela)
+  setTimeout(function() {
+    aviso.classList.add("show");
+  }, 100);
+
+  // Define um timer para esconder o aviso depois da duração
+  setTimeout(function() {
+    // Remove a classe "show" (faz a animação de saída)
+    aviso.classList.remove("show");
+
+    // Espera a animação de saída terminar (0.3s) e remove a div do HTML
+    setTimeout(function() {
+      aviso.remove();
+    }, 300);
+
+  }, duracao);
+}

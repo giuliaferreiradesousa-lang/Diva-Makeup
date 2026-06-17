@@ -1,0 +1,201 @@
+/* ==========================================================================
+   VARIÃVEIS DE DESIGN SYSTEM (TEMA BEAUTY / DIVA)
+   ========================================================================== */
+
+/* ==========================================================================
+   RESET E BASE ESTILOS (MOBILE-FIRST DIRECT)
+   ========================================================================== */
+
+/* Container de Montagem */
+#app {
+  width: 100%;
+  min-height: 100vh;          /* Ocupa a altura total da tela */
+  display: flex;
+  justify-content: center;    /* Centraliza horizontalmente */
+  align-items: center;        /* Centraliza verticalmente */
+  padding: 24px;              /* Margem de segurança para mobile */
+  background-color: var(--color-light); /* Aplica o fundo suave do design system */
+  animation: cardFadeIn 0.5s ease-out;
+}
+
+/* ==========================================================================
+   COMPONENTE: LOGIN CARD
+   ========================================================================== */
+.login-card {
+  width: 100%;
+  max-width: 100%; /* Ocupa tudo no mobile */
+  background: var(--color-white);
+  padding: 36px 24px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(43, 35, 37, 0.04);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-dark);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+.login-header p {
+  font-size: 0.9rem;
+  color: var(--color-gray);
+  line-height: 1.5;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ==========================================================================
+   MICRO-INTERAÃ‡ÃƒO: FLOATING LABELS
+   ========================================================================== */
+.input-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 18px 16px 10px 16px; /* Abre espaÃ§o interno superior para a label flutuar */
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-dark);
+  background: transparent;
+  border: 1.5px solid var(--color-gray-light);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* RÃ³tulo / Label posicionada originalmente em cima do input */
+.input-container label {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  font-size: 0.95rem;
+  color: var(--color-gray);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: left top;
+}
+
+/* Quando o input ganhar foco ou conter texto (placeholder oculto deixa de funcionar) */
+.input-container input:focus,
+.input-container input:not(:placeholder-shown) {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(179, 77, 104, 0.08);
+}
+
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+  transform: translateY(-8px) scale(0.75);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   BOTÃ•ES E ACTIONS
+   ========================================================================== */
+.btn-login {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 8px;
+  box-shadow: 0 4px 12px rgba(179, 77, 104, 0.2);
+}
+
+.btn-login:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(179, 77, 104, 0.3);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 0.9rem;
+  color: var(--color-gray);
+}
+
+.login-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-footer a:hover {
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   ESTADOS DE ERRO (UI/UX FEEDBACK)
+   ========================================================================== */
+.error-message {
+  font-size: 0.8rem;
+  color: var(--color-error);
+  font-weight: 500;
+  margin-top: 6px;
+  padding-left: 4px;
+  display: block;
+}
+
+.input-container input.input-error {
+  border-color: var(--color-error) !important;
+  background-color: #fff5f6;
+}
+
+.input-container input.input-error + label {
+  color: var(--color-error) !important;
+}
+
+/* ==========================================================================
+   ANIMAÃ‡Ã•ES
+   ========================================================================== */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   MEDIA QUERIES - BREAKPOINTS PROGRESSIVOS (DESKTOP / TABLET)
+   ========================================================================== */
+@media (min-width: 480px) {
+  .login-card {
+    max-width: 420px;
+    padding: 48px 40px;
+    border-radius: 24px;
+  }
+  
+  .login-header h1 {
+    font-size: 1.8rem;
+  }
+}
