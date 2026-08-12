@@ -76,6 +76,6 @@ loginForm.form.addEventListener("submit", function (evento) {
   // Aguarda 1.5 segundos para o usuário ler o aviso antes de redirecionar
   setTimeout(function () {
     // Redireciona usando a origem da URL para evitar erros de caminho relativo (Erro 404)
-    window.location.href = window.location.origin + "/src/feature/home/pages/home.html";
+    window.location.href = "../../home/pages/home.html";
   }, 1500);
 });
