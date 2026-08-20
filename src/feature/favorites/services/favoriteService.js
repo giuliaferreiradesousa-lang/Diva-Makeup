@@ -7,7 +7,7 @@
    A chave usada é "favorites".
    ================================================ */
 
-import { getStorageData } from "../../../core/storage.js";
+import { getStorageData, setStorageData } from "../../../core/storage.js";
 
 // Nome da chave onde os favoritos ficam salvos
 var CHAVE_FAVORITOS = "favorites";
@@ -16,19 +16,14 @@ var CHAVE_FAVORITOS = "favorites";
 /* Retorna a lista de todos os favoritos salvos.
    Se não houver nenhum, retorna uma lista vazia. */
 export function getFavorites() {
-  var dados = localStorage.getItem(CHAVE_FAVORITOS);
-
-  if (!dados) {
-    return [];
-  }
-
-  return JSON.parse(dados);
+  var dados = getStorageData(CHAVE_FAVORITOS, []);
+  return Array.isArray(dados) ? dados : [];
 }
 
 /* Salva a lista completa de favoritos no localStorage.
    Função interna — usada pelas funções abaixo. */
 function salvarFavoritos(favoritos) {
-  localStorage.setItem(CHAVE_FAVORITOS, JSON.stringify(favoritos));
+  setStorageData(CHAVE_FAVORITOS, favoritos);
 }
 
 /* Adiciona um produto aos favoritos pelo seu ID.
@@ -38,7 +33,7 @@ export function createFavorite(productId) {
 
   // Cria um novo registro de favorito com ID e produto
   var novoFavorito = {
-    id:        Date.now(),
+    id:        gerarIdFavorito(),
     productId: productId
   };
 
@@ -119,7 +114,7 @@ export function toggleFavorite(productId) {
   } else {
     // Produto não encontrado → adiciona na lista
     var novoFavorito = {
-      id:        Date.now(),
+      id:        gerarIdFavorito(),
       productId: productId
     };
 
@@ -152,4 +147,8 @@ export function getFavoriteProducts() {
   }
 
   return resultado;
+}
+
+function gerarIdFavorito() {
+  return "FAV-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8);
 }

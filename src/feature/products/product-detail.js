@@ -19,6 +19,7 @@ import { findProductById }   from "./services/productServices.js";
 import { addToCart }         from "../cart/services/cartDrawerService.js";
 import { openCartDrawer }    from "../cart/components/CartDrawerComponent.js";
 import { productDetailComponent } from "./components/productDetailComponent.js";
+import { initFavoriteEvents } from "../favorites/favoriteEvents.js";
 
 
 /* --------------------------------------------------
@@ -28,6 +29,7 @@ document.getElementById("navbar").innerHTML = navbarComponent();
 document.getElementById("footer").innerHTML = footerComponent();
 
 initNavbar();
+initFavoriteEvents();
 
 
 /* --------------------------------------------------

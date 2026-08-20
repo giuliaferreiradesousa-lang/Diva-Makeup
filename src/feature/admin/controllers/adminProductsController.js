@@ -149,7 +149,9 @@ export function carregarModuloProdutos() {
                     { name: "preco", label: "Preço", type: "number" },
                     { name: "descricao", label: "Descrição", type: "text" },
                     { name: "modoUso", label: "Modo de Uso", type: "text" },
-                    { name: "ingredientes", label: "Ingredientes", type: "text" }
+                    { name: "ingredientes", label: "Ingredientes", type: "text" },
+                    { name: "categoryId", label: "Categoria", type: "select", options: montarOpcoesCategorias() },
+                    { name: "imagem", label: "Imagem (URL ou Base64)", type: "text" }
                 ];
                 
                 if (window.exibirModalUpdate) {
@@ -168,6 +170,15 @@ export function carregarModuloProdutos() {
     }
 
     renderizarListaProdutos();
+}
+
+function montarOpcoesCategorias() {
+    var categorias = getCategories();
+    var opcoes = [];
+    for (var i = 0; i < categorias.length; i++) {
+        opcoes.push({ value: categorias[i].id, label: categorias[i].nome });
+    }
+    return opcoes;
 }
 
 function renderizarListaProdutos() {

@@ -70,7 +70,10 @@ loginForm.form.addEventListener("submit", function (evento) {
   /* --- 3C: SALVAR SESSÃO E REDIRECIONAR ---
      Login bem-sucedido! Salva os dados do usuário
      no navegador e manda para a página inicial. */
-  LoginService.createSession(resultado.user);
+  if (!LoginService.createSession(resultado.user)) {
+    showToast("Não foi possível iniciar a sessão. Tente novamente.", 4000);
+    return;
+  }
   showToast("Que bom ter você de volta, " + resultado.user.nome + "!");
 
   // Aguarda 1.5 segundos para o usuário ler o aviso antes de redirecionar

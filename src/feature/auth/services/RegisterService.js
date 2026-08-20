@@ -3,6 +3,8 @@ import { ROLES } from "../../../core/rolesManager.js"; // Importando do novo man
 
 export class RegisterService {
   static register(nome, email, senha) {
+    nome = nome.trim();
+    email = email.trim().toLowerCase();
     // 1. Verifica se o email já está em uso
     const userExists = findUserByEmail(email);
 

@@ -45,8 +45,10 @@ function getStorageData(chave, valorPadrao) {
 function setStorageData(chave, dado) {
   try {
     localStorage.setItem(chave, JSON.stringify(dado));
+    return true;
   } catch (erro) {
     console.error("Falha ao escrever no disco local. O armazenamento pode estar cheio.", erro);
+    throw erro;
   }
 }
 
@@ -63,7 +65,8 @@ var CHAVE_USUARIOS = "usuarios";
 /* Busca e retorna a lista completa de usuários salvos.
    Se não houver nenhum usuário, retorna uma lista vazia. */
 function getUsers() {
-  return getStorageData(CHAVE_USUARIOS, []);
+  var usuarios = getStorageData(CHAVE_USUARIOS, []);
+  return Array.isArray(usuarios) ? usuarios : [];
 }
 
 /* Salva a lista completa de usuários no localStorage.
@@ -89,11 +92,12 @@ export function createUser(usuario) {
    Se não encontrar, retorna null. */
 export function findUserByEmail(email) {
   var usuarios = getUsers();
+  var emailNormalizado = String(email || "").trim().toLowerCase();
 
   // Percorre a lista de usuários um por um
   for (var i = 0; i < usuarios.length; i++) {
     // Se o e-mail bater, retorna esse usuário
-    if (usuarios[i].email === email) {
+    if (String(usuarios[i].email || "").trim().toLowerCase() === emailNormalizado) {
       return usuarios[i];
     }
   }

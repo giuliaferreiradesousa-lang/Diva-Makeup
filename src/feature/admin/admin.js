@@ -15,13 +15,15 @@ import { carregarModuloAbout } from "./controllers/adminAboutController.js";
 import { carregarModuloPedidos } from "./controllers/adminOrdersController.js";
 // 1. Proteger página para garantir que apenas admin acesse
 // Boa Prática (Segurança): Sempre validar o token antes de carregar dados sensíveis.
-protectAdminPage();
+var acessoAdminPermitido = protectAdminPage();
 
 // 2. Montar layout principal (Navbar e Footer)
 // Boa Prática (Arquitetura de Componentes): Reutilizamos o mesmo Navbar/Footer criados para as outras telas.
-document.getElementById("navbar").innerHTML = navbarComponent();
-document.getElementById("footer").innerHTML = footerComponent();
-initNavbar();
+if (acessoAdminPermitido) {
+    document.getElementById("navbar").innerHTML = navbarComponent();
+    document.getElementById("footer").innerHTML = footerComponent();
+    initNavbar();
+}
 
 // 3. Injeção da Sidebar
 // Configuração do menu lateral. Centralizar as configurações em arrays facilita a manutenção.
@@ -33,7 +35,9 @@ var itensMenuAdmin = [
     { id: 'view-about', nome: 'Sobre Nós', icone: '🖼️', link: '#' }
 ];
 
-injetarSidebar('admin-sidebar-container', itensMenuAdmin, { tituloMobile: 'Admin Diva' });
+if (acessoAdminPermitido) {
+    injetarSidebar('admin-sidebar-container', itensMenuAdmin, { tituloMobile: 'Admin Diva' });
+}
 
 var linksSidebar = document.querySelectorAll("#admin-sidebar-container .sidebar-link");
 for (var i = 0; i < linksSidebar.length; i++) {
@@ -151,4 +155,6 @@ function configurarComportamentoAbas() {
 }
 
 // Iniciar a primeira view (Home) por padrão
-window.mudarViewAdmin('view-home');
+if (acessoAdminPermitido) {
+    window.mudarViewAdmin('view-home');
+}

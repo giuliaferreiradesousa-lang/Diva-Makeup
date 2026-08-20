@@ -24,6 +24,7 @@ export function heroComponent() {
   for (var i = 0; i < numSlides; i++) {
     var slide = heroSlides[i];
     var isActive = i === 0 ? " active" : "";
+    var textoBotao = slide.textoBotao || "Comprar Agora";
     
     htmlSlides += 
       '<section class="hero-slide-item' + isActive + '">' +
@@ -32,7 +33,7 @@ export function heroComponent() {
             '<h1>' + slide.titulo + '</h1>' +
             '<p>' + slide.subtitulo + '</p>' +
             '<div class="hero-buttons">' +
-              '<a href="../../products/pages/products.html" class="btn-primary">Comprar Agora</a>' +
+              '<a href="../../products/pages/products.html" class="btn-primary">' + textoBotao + '</a>' +
               '<a href="../../about/pages/about.html" class="btn-secondary">Conheça a Marca</a>' +
             '</div>' +
           '</div>' +

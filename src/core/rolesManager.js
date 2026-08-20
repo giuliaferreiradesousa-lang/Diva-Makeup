@@ -77,7 +77,7 @@ export function protectAdminPage() {
   // Se não há ninguém logado, redireciona imediatamente
   if (!sessao) {
     redirecionarComAviso();
-    return;
+    return false;
   }
 
   // Tenta ler o e-mail do usuário logado
@@ -98,7 +98,10 @@ export function protectAdminPage() {
   // Se não for admin, barra o acesso e redireciona
   if (roleAtual !== ROLES.ADMIN) {
     redirecionarComAviso();
+    return false;
   }
+
+  return true;
 }
 
 /* Exibe um aviso de "Acesso Negado" e redireciona

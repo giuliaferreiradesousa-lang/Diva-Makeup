@@ -38,7 +38,8 @@ carregarProdutosIniciais();
 
 /* Retorna a lista completa de produtos do localStorage. */
 export function getProducts() {
-  return getStorageData(CHAVE_PRODUTOS, []);
+  var produtos = getStorageData(CHAVE_PRODUTOS, []);
+  return Array.isArray(produtos) ? produtos : [];
 }
 
 /* Salva a lista completa de produtos no localStorage.
@@ -49,6 +50,7 @@ function salvarProdutos(produtos) {
     setStorageData(CHAVE_PRODUTOS, produtos);
   } catch (erro) {
     console.error("Falha ao salvar produtos. Espaço em disco insuficiente?", erro);
+    throw erro;
   }
 }
 

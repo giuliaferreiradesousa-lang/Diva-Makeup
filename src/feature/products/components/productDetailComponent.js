@@ -48,7 +48,7 @@ export function productDetailComponent(produto, htmlSwatches, precoFormatado) {
           // --- Botões de Ação ---
           '<div class="pdp-actions">' +
             '<button class="btn-add-cart" id="btn-add-cart">Adicionar à Sacola</button>' +
-            '<button class="btn-wishlist" aria-label="Adicionar aos favoritos">❤</button>' +
+            '<button class="btn-wishlist favorite-btn" data-product-id="' + produto.id + '" aria-label="Adicionar aos favoritos">❤</button>' +
           '</div>' +
 
           // --- Abas de Informação Adicional ---

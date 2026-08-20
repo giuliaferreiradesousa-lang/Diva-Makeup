@@ -16,6 +16,7 @@ import { footerComponent }  from "../../shared/components/footer/footerComponent
 import { showToast }        from "../../shared/components/toast/toastComponent.js";
 import { cartComponent }    from "./components/cartComponent.js";
 import { getCart, updateCartQuantity, removeFromCart } from "./services/cartService.js";
+import { initNavbar } from "../../shared/components/navbar/navbarController.js";
 
 
 /* --------------------------------------------------
@@ -29,9 +30,6 @@ import { getCart, updateCartQuantity, removeFromCart } from "./services/cartServ
    É chamada na inicialização e toda vez que um item muda. */
 function render() {
   // Coloca a navbar e o footer na tela
-  document.querySelector("#navbar").innerHTML = navbarComponent();
-  document.querySelector("#footer").innerHTML = footerComponent();
-
   // Boa Prática (SoC): A leitura dos dados agora é feita pela camada de Service
   var itens = getCart();
 
@@ -64,16 +62,17 @@ function iniciarEventos() {
   for (var i = 0; i < botoesAumentar.length; i++) {
     botoesAumentar[i].addEventListener("click", function() {
       var id = this.getAttribute("data-id");
+      var cor = this.getAttribute("data-color");
       var itens = getCart();
       var itemAtual;
       
       for (var n = 0; n < itens.length; n++) {
-        if (itens[n].id == id) itemAtual = itens[n];
+        if (itens[n].id == id && (itens[n].corSelecionada || "Única") === cor) itemAtual = itens[n];
       }
 
       if (itemAtual) {
         // Boa Prática (SoC): Delegamos a regra de negócio para a camada Service
-        updateCartQuantity(id, itemAtual.quantidade + 1);
+        updateCartQuantity(id, cor, itemAtual.quantidade + 1);
       }
       render(); // Atualiza a tela após a mudança
     });
@@ -85,18 +84,19 @@ function iniciarEventos() {
   for (var j = 0; j < botoesDiminuir.length; j++) {
     botoesDiminuir[j].addEventListener("click", function() {
       var id = this.getAttribute("data-id");
+      var cor = this.getAttribute("data-color");
       var itens = getCart();
       var itemAtual;
 
       for (var n = 0; n < itens.length; n++) {
-        if (itens[n].id == id) itemAtual = itens[n];
+        if (itens[n].id == id && (itens[n].corSelecionada || "Única") === cor) itemAtual = itens[n];
       }
 
       if (itemAtual) {
         if (itemAtual.quantidade > 1) {
-          updateCartQuantity(id, itemAtual.quantidade - 1);
+          updateCartQuantity(id, cor, itemAtual.quantidade - 1);
         } else {
-          removeFromCart(id);
+          removeFromCart(id, cor);
         }
       }
       render();
@@ -109,7 +109,8 @@ function iniciarEventos() {
   for (var k = 0; k < botoesRemover.length; k++) {
     botoesRemover[k].addEventListener("click", function() {
       var id = this.getAttribute("data-id");
-      removeFromCart(id);
+      var cor = this.getAttribute("data-color");
+      removeFromCart(id, cor);
       showToast("Produto removido do carrinho!");
       render();
     });
@@ -124,4 +125,7 @@ function iniciarEventos() {
    arquivo é carregado pelo cart.html.
    -------------------------------------------------- */
 
+document.querySelector("#navbar").innerHTML = navbarComponent();
+document.querySelector("#footer").innerHTML = footerComponent();
+initNavbar();
 render();

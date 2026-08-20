@@ -22,6 +22,7 @@ export function cartItemComponent(item) {
           <button
             class="decrease-quantity"
             data-id="${item.id}"
+            data-color="${item.corSelecionada || "Única"}"
           >
             -
           </button>
@@ -31,6 +32,7 @@ export function cartItemComponent(item) {
           <button
             class="increase-quantity"
             data-id="${item.id}"
+            data-color="${item.corSelecionada || "Única"}"
           >
             +
           </button>
@@ -40,6 +42,7 @@ export function cartItemComponent(item) {
         <button
           class="remove-cart-item"
           data-id="${item.id}"
+          data-color="${item.corSelecionada || "Única"}"
         >
           Remover
         </button>

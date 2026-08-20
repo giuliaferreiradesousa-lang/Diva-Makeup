@@ -30,7 +30,7 @@ function verificarLogin() {
         '</div>';
     }
 
-    showToast("Acesso restrito. Faça login para finalizar sua compra.", "error");
+    showToast("Acesso restrito. Faça login para finalizar sua compra.", 3000);
 
     setTimeout(function() {
       window.location.href = "../../auth/pages/login.html";
@@ -77,8 +77,10 @@ function iniciarComportamentosDoFormulario() {
     opcoesRadio[i].addEventListener("change", function() {
       if (this.value === "cartao") {
         camposCartao.classList.remove("hidden");
+        definirObrigatoriedadeCartao(true);
       } else {
         camposCartao.classList.add("hidden");
+        definirObrigatoriedadeCartao(false);
       }
     });
   }
@@ -128,6 +130,15 @@ function iniciarComportamentosDoFormulario() {
       var opcaoMarcada = document.querySelector('input[name="pagamento"]:checked');
       var formaPagamento = opcaoMarcada ? opcaoMarcada.value : "pix";
 
+      if (formaPagamento === "cartao" && !validarCartao()) {
+        showToast("Preencha corretamente os dados do cartão.", 4000);
+        if (btnFinalizar) {
+          btnFinalizar.textContent = "Finalizar Pedido";
+          btnFinalizar.disabled = false;
+        }
+        return;
+      }
+
       // Boa Prática (Tratamento de Erros): O bloco try/catch intercepta falhas (ex: disco cheio) 
       // e garante que a tela não fique "congelada", destravando o botão para o usuário e 
       // exibindo uma mensagem de alerta.
@@ -139,10 +150,10 @@ function iniciarComportamentosDoFormulario() {
         createOrder(dadosEntrega, formaPagamento, carrinho, totais.totalValue, usuarioLogado);
         clearCart();
         
-        showToast("Pedido realizado com sucesso!", "success");
+        showToast("Pedido realizado com sucesso!", 3000);
 
         setTimeout(function() {
-          window.location.href = window.location.origin + "/src/feature/home/pages/home.html";
+          window.location.href = new URL("../../home/pages/home.html", window.location.href).href;
         }, 2000);
 
       } catch (erro) {
@@ -154,6 +165,21 @@ function iniciarComportamentosDoFormulario() {
       }
     });
   }
+}
+
+function definirObrigatoriedadeCartao(obrigatorio) {
+  var ids = ["cc-num", "cc-val", "cc-cvv"];
+  for (var i = 0; i < ids.length; i++) {
+    var campo = document.getElementById(ids[i]);
+    if (campo) campo.required = obrigatorio;
+  }
+}
+
+function validarCartao() {
+  var numero = document.getElementById("cc-num").value.replace(/\D/g, "");
+  var validade = document.getElementById("cc-val").value.trim();
+  var cvv = document.getElementById("cc-cvv").value.replace(/\D/g, "");
+  return numero.length >= 13 && numero.length <= 19 && /^\d{2}\/\d{2}$/.test(validade) && /^\d{3,4}$/.test(cvv);
 }
 
 /* --------------------------------------------------

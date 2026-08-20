@@ -3,7 +3,8 @@ import { getStorageData, setStorageData } from "../../../core/storage.js";
 var CHAVE_CARRINHO = "carrinho";
 
 export function pegarCarrinho() {
-  return getStorageData(CHAVE_CARRINHO, []);
+  var carrinho = getStorageData(CHAVE_CARRINHO, []);
+  return Array.isArray(carrinho) ? carrinho : [];
 }
 
 export function salvarCarrinho(itens) {

@@ -5,7 +5,8 @@ import { getStorageData, setStorageData } from "../../../core/storage.js";
  * @returns {Array} Lista de categorias cadastradas.
  */
 export function getCategories() {
-    return getStorageData("categories", []);
+    var categories = getStorageData("categories", []);
+    return Array.isArray(categories) ? categories : [];
 }
 
 /**

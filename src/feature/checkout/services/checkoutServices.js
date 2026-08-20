@@ -18,7 +18,8 @@ var CHAVE_PEDIDOS = "pedidos";
  * Se não houver nenhum pedido, retorna uma lista vazia.
  */
 export function getOrders() {
-  return getStorageData(CHAVE_PEDIDOS, []);
+  var pedidos = getStorageData(CHAVE_PEDIDOS, []);
+  return Array.isArray(pedidos) ? pedidos : [];
 }
 
 /**

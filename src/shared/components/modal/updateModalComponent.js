@@ -76,10 +76,21 @@ function criarModalBase(tipo, titulo, dadosObjeto, conteudoCorpo, callbackConfir
             label.className = 'diva-modal-label';
             label.textContent = configCampo.label;
 
-            var input = document.createElement('input');
+            var input = document.createElement(configCampo.type === 'select' ? 'select' : 'input');
             input.className = 'diva-modal-input';
-            input.type = configCampo.type || 'text';
+            if (configCampo.type !== 'select') {
+                input.type = configCampo.type || 'text';
+            }
             input.name = configCampo.name;
+
+            if (configCampo.type === 'select' && configCampo.options) {
+                for (var o = 0; o < configCampo.options.length; o++) {
+                    var option = document.createElement('option');
+                    option.value = configCampo.options[o].value;
+                    option.textContent = configCampo.options[o].label;
+                    input.appendChild(option);
+                }
+            }
 
             if (dadosObjeto && dadosObjeto[configCampo.name] !== undefined) {
                 input.value = dadosObjeto[configCampo.name];

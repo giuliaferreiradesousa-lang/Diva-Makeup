@@ -2,6 +2,7 @@ import { getCategories, createCategory, deleteCategory, updateCategory } from ".
 import { showToast } from "../../../shared/components/toast/toastComponent.js";
 import { categoryAdminListComponent } from "../../categories/components/categoryAdminListComponent.js";
 import { categoryFormComponent } from "../../categories/components/categoryFormComponent.js";
+import { getProducts } from "../../products/services/productServices.js";
 
 /**
  * Controller responsável pela tela de Gestão de Categorias no Painel.
@@ -54,7 +55,7 @@ export function carregarModuloCategorias() {
 
             try {
                 var category = { 
-                    id: new Date().getTime(), 
+                    id: "CAT-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8),
                     nome: nome, 
                     descricao: desc, 
                     imagem: base64CategoryImage || "" 
@@ -86,6 +87,19 @@ export function carregarModuloCategorias() {
                 var itemParaExcluir = null;
                 for (var k = 0; k < categorias.length; k++) {
                     if (categorias[k].id == idItem) { itemParaExcluir = categorias[k]; break; }
+                }
+
+                var produtos = getProducts();
+                var categoriaEmUso = false;
+                for (var p = 0; p < produtos.length; p++) {
+                    if (produtos[p].categoryId == idItem) {
+                        categoriaEmUso = true;
+                        break;
+                    }
+                }
+                if (categoriaEmUso) {
+                    showToast("Reclassifique os produtos desta categoria antes de excluí-la.", 4000);
+                    return;
                 }
 
                 if (window.exibirModalDelete) {

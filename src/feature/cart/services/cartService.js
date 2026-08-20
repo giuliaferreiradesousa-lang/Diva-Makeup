@@ -7,7 +7,8 @@ var CHAVE_CARRINHO = "carrinho";
  * Boa Prática (SoC): A persistência de dados ocorre unicamente aqui.
  */
 export function getCart() {
-    return getStorageData(CHAVE_CARRINHO, []);
+    var cart = getStorageData(CHAVE_CARRINHO, []);
+    return Array.isArray(cart) ? cart : [];
 }
 
 /**
@@ -42,11 +43,11 @@ export function addToCart(produto, quantidade) {
 /**
  * Atualiza explicitamente a quantidade de um item no carrinho.
  */
-export function updateCartQuantity(produtoId, novaQuantidade) {
+export function updateCartQuantity(produtoId, cor, novaQuantidade) {
     var cart = getCart();
 
     for (var i = 0; i < cart.length; i++) {
-        if (cart[i].id == produtoId) {
+        if (cart[i].id == produtoId && (cart[i].corSelecionada || "Única") === cor) {
             if (novaQuantidade <= 0) {
                 cart.splice(i, 1);
             } else {
@@ -62,11 +63,11 @@ export function updateCartQuantity(produtoId, novaQuantidade) {
 /**
  * Remove um item completamente do carrinho.
  */
-export function removeFromCart(produtoId) {
+export function removeFromCart(produtoId, cor) {
     var cart = getCart();
 
     for (var i = 0; i < cart.length; i++) {
-        if (cart[i].id == produtoId) {
+        if (cart[i].id == produtoId && (cart[i].corSelecionada || "Única") === cor) {
             cart.splice(i, 1);
             break;
         }
