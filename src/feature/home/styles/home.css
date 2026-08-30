@@ -60,6 +60,21 @@
   overflow: hidden;
 }
 
+.vitrine-image-container::before {
+  content: "Produto";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray-light);
+  color: var(--color-primary);
+  font-family: var(--font-main);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .vitrine-image {
   position: absolute;
   top: 0;
@@ -68,6 +83,11 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
+  z-index: 1;
+}
+
+.vitrine-image.vitrine-image-fallback {
+  opacity: 0;
 }
 
 .vitrine-card:hover .vitrine-image {
@@ -131,6 +151,92 @@
   padding: 4rem;
   color: #666;
   font-size: 1.2rem;
+}
+
+/* =========================================
+   === CARROSSEL DE PRODUTOS             ===
+   ========================================= */
+
+.product-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 1200px;
+  margin: -1.5rem auto 2.5rem;
+}
+
+.product-filter {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+}
+
+.product-filter.active,
+.product-filter[aria-pressed="true"] {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.products-carousel-shell {
+  position: relative;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2.75rem;
+}
+
+.vitrine-grid.products-carousel-track {
+  display: flex;
+  grid-template-columns: none;
+  gap: 1.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0 1.5rem;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.products-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.products-carousel-track .vitrine-card {
+  flex: 0 0 min(85%, 300px);
+  scroll-snap-align: start;
+}
+
+.products-carousel-btn {
+  top: 45%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.5rem;
+}
+
+.products-carousel-prev {
+  left: 0;
+}
+
+.products-carousel-next {
+  right: 0;
+}
+
+.products-carousel-empty[hidden] {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .products-carousel-shell {
+    padding: 0 3.5rem;
+  }
+
+  .products-carousel-track .vitrine-card {
+    flex-basis: calc((100% - 1.5rem) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .products-carousel-track .vitrine-card {
+    flex-basis: calc((100% - 4.5rem) / 4);
+  }
 }
 
 /* =========================================
